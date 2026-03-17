@@ -1,28 +1,60 @@
 {
-  "lastUpdated": "2026-03-16T00:00:00Z",
+  "lastUpdated": "2026-03-17T06:57:55.077Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
-      "name": "atlens",
-      "description": "Understands a codebase",
-      "language": "JavaScript",
+      "name": "razzyshmazzy.github.io",
+      "description": "The home page of all things raz!",
+      "language": "HTML",
       "stars": 0,
-      "url": "https://github.com/razzyshmazzy/atlens",
+      "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-03-10T01:17:09Z",
+      "updatedAt": "2026-03-17T04:47:37Z",
       "topics": [],
       "summary": {
-        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
+        "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
         "techStack": {
-          "languages": ["JavaScript"],
-          "frameworks": ["React 19", "Express.js", "Vite"],
-          "tools": ["Anthropic Claude API", "simple-git", "Tailwind CSS", "Radix UI", "Lucide React"]
+          "languages": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "WebAssembly",
+            "Python",
+            "Lua",
+            "SQL",
+            "GLSL",
+            "Markdown",
+            "CoffeeScript",
+            "Brainfuck",
+            "SVG",
+            "JSON"
+          ],
+          "frameworks": [
+            "Brython",
+            "Fengari",
+            "sql.js",
+            "marked.js"
+          ],
+          "tools": [
+            "GitHub Pages",
+            "GitHub Actions",
+            "highlight.js"
+          ]
         },
-        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
-        "entryPoints": ["src/main.jsx", "server/index.js"],
-        "keyFiles": ["server/llm.js", "server/repoParser.js", "server/summarizer.js", "src/components/RepoOverview.jsx"],
-        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
-        "openQuestions": ["Could the parser use AST analysis instead of raw truncation?", "Add support for private repos via GitHub token?"],
+        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and Brainfuck hides an easter egg.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "index.html",
+          "repos.json",
+          ".github/workflows/sync-repos.yml"
+        ],
+        "setup": "Push to GitHub — Pages serves it automatically. Run the sync workflow to refresh repo data.",
+        "openQuestions": [
+          "Add a dark/light theme toggle?",
+          "Support private repos via GitHub token?"
+        ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
     },
@@ -33,20 +65,36 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/doccer",
       "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
+      "updatedAt": "2026-03-17T01:36:49Z",
       "topics": [],
       "summary": {
         "purpose": "Web app that authenticates with Google, fetches all documents from a Google Drive account, and bundles them into a single downloadable PDF.",
         "techStack": {
-          "languages": ["JavaScript"],
+          "languages": [
+            "JavaScript"
+          ],
           "frameworks": [],
-          "tools": ["Google Docs API", "Google Drive API", "PDF generation library"]
+          "tools": [
+            "Google Docs API",
+            "Google Drive API",
+            "PDF generation library"
+          ]
         },
         "architecture": "Frontend JavaScript app that handles Google OAuth flow, iterates over Drive documents, converts each to PDF format via Google's export endpoint, then merges them into a single downloadable file.",
-        "entryPoints": ["index.html", "main.js"],
-        "keyFiles": ["auth.js", "drive.js", "pdf.js"],
+        "entryPoints": [
+          "index.html",
+          "main.js"
+        ],
+        "keyFiles": [
+          "auth.js",
+          "drive.js",
+          "pdf.js"
+        ],
         "setup": "Configure Google OAuth credentials and open index.html in a browser",
-        "openQuestions": ["Does it preserve original document formatting?", "How are large document sets handled (rate limits)?"],
+        "openQuestions": [
+          "Does it preserve original document formatting?",
+          "How are large document sets handled (rate limits)?"
+        ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
     },
@@ -57,164 +105,33 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/library",
       "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
+      "updatedAt": "2026-03-15T18:55:24Z",
       "topics": [],
       "summary": {
         "purpose": "Browser-based PDF viewer that integrates open-source library APIs to fetch, render, and navigate PDF documents in the browser.",
         "techStack": {
-          "languages": ["JavaScript"],
+          "languages": [
+            "JavaScript"
+          ],
           "frameworks": [],
-          "tools": ["PDF.js", "Open Library API"]
+          "tools": [
+            "PDF.js",
+            "Open Library API"
+          ]
         },
         "architecture": "Single-page frontend that queries open-source library APIs for book/document metadata, fetches PDF files, and renders them using a JavaScript PDF engine with page navigation controls.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["viewer.js", "api.js"],
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "viewer.js",
+          "api.js"
+        ],
         "setup": "Open index.html — no server required",
-        "openQuestions": ["Which library API is used — Open Library, Internet Archive?", "Is there search/filter by title or author?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "esp32",
-      "description": null,
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/esp32",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "JavaScript companion app for an ESP32 microcontroller — likely handles device configuration, firmware updates, or real-time sensor data visualization.",
-        "techStack": {
-          "languages": ["JavaScript"],
-          "frameworks": [],
-          "tools": ["WebSerial API or WebSocket", "ESP32 firmware"]
-        },
-        "architecture": "Browser or Node.js app that communicates with an ESP32 device over serial or WebSocket, reads sensor data or sends control commands, and displays the results.",
-        "entryPoints": ["index.js"],
-        "keyFiles": ["serial.js", "config.js"],
-        "setup": "Connect ESP32 via USB or WiFi, then run the JS app",
-        "openQuestions": ["Does it use WebSerial or WebSocket for communication?", "What sensors or peripherals does the ESP32 use?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "status32",
-      "description": null,
-      "language": "HTML",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/status32",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Live status dashboard for an ESP32 device, displaying system health, sensor readings, or network information in the browser.",
-        "techStack": {
-          "languages": ["HTML", "CSS", "JavaScript"],
-          "frameworks": [],
-          "tools": ["ESP32 web server"]
-        },
-        "architecture": "Static HTML page served directly from the ESP32's built-in web server (or hosted externally), polling the device for status updates and displaying them in a clean dashboard layout.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["index.html", "style.css"],
-        "setup": "Flash ESP32 with firmware that serves this page, then open the device's IP in a browser",
-        "openQuestions": ["Is it served directly from the ESP32 chip?", "What metrics are displayed?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "ratemyteacher",
-      "description": null,
-      "language": "CSS",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/ratemyteacher",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Student feedback web app for browsing and rating teachers, with a heavily styled CSS frontend.",
-        "techStack": {
-          "languages": ["HTML", "CSS", "JavaScript"],
-          "frameworks": [],
-          "tools": []
-        },
-        "architecture": "Frontend web app with a teacher listing page, individual teacher profiles, and a rating/review submission form — emphasis on polished CSS design.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["style.css", "index.html"],
-        "setup": "Open index.html in a browser",
-        "openQuestions": ["Is there a backend for storing reviews?", "Are teacher listings static or fetched from an API?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "money",
-      "description": null,
-      "language": "Java",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/money",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Java application for personal finance tracking — logging transactions, categorizing expenses, and viewing budget summaries.",
-        "techStack": {
-          "languages": ["Java"],
-          "frameworks": [],
-          "tools": ["Java SE", "File I/O or SQLite"]
-        },
-        "architecture": "Console or Swing-based Java app with transaction models, a simple data store (file or embedded DB), and reporting logic for income vs. expenses.",
-        "entryPoints": ["Main.java"],
-        "keyFiles": ["Main.java", "Transaction.java", "Budget.java"],
-        "setup": "javac *.java && java Main",
-        "openQuestions": ["Is it a CLI or GUI app?", "Does it persist data between runs?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "chess",
-      "description": null,
-      "language": "HTML",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/chess",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Browser-based chess game with a visual board, piece movement, and basic game logic implemented in HTML and JavaScript.",
-        "techStack": {
-          "languages": ["HTML", "CSS", "JavaScript"],
-          "frameworks": [],
-          "tools": []
-        },
-        "architecture": "Single HTML page rendering an 8×8 board with CSS grid or table, JavaScript handling piece selection, legal move generation, turn management, and check/checkmate detection.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["index.html", "chess.js", "style.css"],
-        "setup": "Open index.html in a browser — no server needed",
-        "openQuestions": ["Is there an AI opponent?", "Are all special moves implemented (castling, en passant)?"],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "website",
-      "description": "chess",
-      "language": "CSS",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/website",
-      "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
-      "topics": [],
-      "summary": {
-        "purpose": "CSS-focused chess-themed website — likely a landing page or portfolio piece with polished styling around a chess game or chess content.",
-        "techStack": {
-          "languages": ["HTML", "CSS"],
-          "frameworks": [],
-          "tools": []
-        },
-        "architecture": "Static site with a chess aesthetic: board-pattern backgrounds, piece imagery, and structured content sections showcasing CSS layout and animation techniques.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["style.css", "index.html"],
-        "setup": "Open index.html — static, no build step",
-        "openQuestions": ["Is this a showcase site or a playable game?", "Does it embed the chess repo?"],
+        "openQuestions": [
+          "Which library API is used — Open Library, Internet Archive?",
+          "Is there search/filter by title or author?"
+        ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
     },
@@ -225,44 +142,299 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy",
       "homepage": null,
-      "updatedAt": "2026-03-09T00:00:00Z",
+      "updatedAt": "2026-03-12T05:54:18Z",
       "topics": [],
       "summary": {
         "purpose": "GitHub profile README — the special repository that renders on your GitHub profile page, introducing yourself and highlighting your projects.",
         "techStack": {
-          "languages": ["Markdown"],
+          "languages": [
+            "Markdown"
+          ],
           "frameworks": [],
-          "tools": ["GitHub Readme Stats", "GitHub Actions badges"]
+          "tools": [
+            "GitHub Readme Stats",
+            "GitHub Actions badges"
+          ]
         },
         "architecture": "A single README.md file that GitHub renders as your public profile. May include dynamic content like contribution graphs, language stats, or pinned project cards.",
-        "entryPoints": ["README.md"],
-        "keyFiles": ["README.md"],
+        "entryPoints": [
+          "README.md"
+        ],
+        "keyFiles": [
+          "README.md"
+        ],
         "setup": "Edit README.md — GitHub renders it automatically on your profile",
-        "openQuestions": ["Does it include dynamic stats badges?"],
+        "openQuestions": [
+          "Does it include dynamic stats badges?"
+        ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
     },
     {
-      "name": "razzyshmazzy.github.io",
-      "description": "The home page of all things raz!",
-      "language": null,
+      "name": "atlens",
+      "description": "Understands a codebase",
+      "language": "JavaScript",
       "stars": 0,
-      "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
-      "homepage": "https://razzyshmazzy.github.io",
-      "updatedAt": "2026-03-16T00:00:00Z",
+      "url": "https://github.com/razzyshmazzy/atlens",
+      "homepage": null,
+      "updatedAt": "2026-03-10T01:17:12Z",
       "topics": [],
       "summary": {
-        "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
+        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
         "techStack": {
-          "languages": ["HTML", "CSS", "JavaScript", "WebAssembly", "Python", "Lua", "SQL", "GLSL", "Markdown", "CoffeeScript", "Brainfuck", "SVG", "JSON"],
-          "frameworks": ["Brython", "Fengari", "sql.js", "marked.js"],
-          "tools": ["GitHub Pages", "GitHub Actions", "highlight.js"]
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [
+            "React 19",
+            "Express.js",
+            "Vite"
+          ],
+          "tools": [
+            "Anthropic Claude API",
+            "simple-git",
+            "Tailwind CSS",
+            "Radix UI",
+            "Lucide React"
+          ]
         },
-        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and Brainfuck hides an easter egg.",
-        "entryPoints": ["index.html"],
-        "keyFiles": ["index.html", "repos.json", ".github/workflows/sync-repos.yml"],
-        "setup": "Push to GitHub — Pages serves it automatically. Run the sync workflow to refresh repo data.",
-        "openQuestions": ["Add a dark/light theme toggle?", "Support private repos via GitHub token?"],
+        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
+        "entryPoints": [
+          "src/main.jsx",
+          "server/index.js"
+        ],
+        "keyFiles": [
+          "server/llm.js",
+          "server/repoParser.js",
+          "server/summarizer.js",
+          "src/components/RepoOverview.jsx"
+        ],
+        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
+        "openQuestions": [
+          "Could the parser use AST analysis instead of raw truncation?",
+          "Add support for private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "status32",
+      "description": null,
+      "language": "HTML",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/status32",
+      "homepage": null,
+      "updatedAt": "2026-02-17T03:22:47Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Live status dashboard for an ESP32 device, displaying system health, sensor readings, or network information in the browser.",
+        "techStack": {
+          "languages": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": [
+            "ESP32 web server"
+          ]
+        },
+        "architecture": "Static HTML page served directly from the ESP32's built-in web server (or hosted externally), polling the device for status updates and displaying them in a clean dashboard layout.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "index.html",
+          "style.css"
+        ],
+        "setup": "Flash ESP32 with firmware that serves this page, then open the device's IP in a browser",
+        "openQuestions": [
+          "Is it served directly from the ESP32 chip?",
+          "What metrics are displayed?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "esp32",
+      "description": null,
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/esp32",
+      "homepage": null,
+      "updatedAt": "2026-02-12T19:06:27Z",
+      "topics": [],
+      "summary": {
+        "purpose": "JavaScript companion app for an ESP32 microcontroller — likely handles device configuration, firmware updates, or real-time sensor data visualization.",
+        "techStack": {
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": [
+            "WebSerial API or WebSocket",
+            "ESP32 firmware"
+          ]
+        },
+        "architecture": "Browser or Node.js app that communicates with an ESP32 device over serial or WebSocket, reads sensor data or sends control commands, and displays the results.",
+        "entryPoints": [
+          "index.js"
+        ],
+        "keyFiles": [
+          "serial.js",
+          "config.js"
+        ],
+        "setup": "Connect ESP32 via USB or WiFi, then run the JS app",
+        "openQuestions": [
+          "Does it use WebSerial or WebSocket for communication?",
+          "What sensors or peripherals does the ESP32 use?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "ratemyteacher",
+      "description": null,
+      "language": "CSS",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/ratemyteacher",
+      "homepage": null,
+      "updatedAt": "2026-01-28T17:46:44Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Student feedback web app for browsing and rating teachers, with a heavily styled CSS frontend.",
+        "techStack": {
+          "languages": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": []
+        },
+        "architecture": "Frontend web app with a teacher listing page, individual teacher profiles, and a rating/review submission form — emphasis on polished CSS design.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "style.css",
+          "index.html"
+        ],
+        "setup": "Open index.html in a browser",
+        "openQuestions": [
+          "Is there a backend for storing reviews?",
+          "Are teacher listings static or fetched from an API?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "money",
+      "description": null,
+      "language": "Java",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/money",
+      "homepage": null,
+      "updatedAt": "2025-09-18T02:41:51Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Java application for personal finance tracking — logging transactions, categorizing expenses, and viewing budget summaries.",
+        "techStack": {
+          "languages": [
+            "Java"
+          ],
+          "frameworks": [],
+          "tools": [
+            "Java SE",
+            "File I/O or SQLite"
+          ]
+        },
+        "architecture": "Console or Swing-based Java app with transaction models, a simple data store (file or embedded DB), and reporting logic for income vs. expenses.",
+        "entryPoints": [
+          "Main.java"
+        ],
+        "keyFiles": [
+          "Main.java",
+          "Transaction.java",
+          "Budget.java"
+        ],
+        "setup": "javac *.java && java Main",
+        "openQuestions": [
+          "Is it a CLI or GUI app?",
+          "Does it persist data between runs?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "chess",
+      "description": null,
+      "language": "HTML",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/chess",
+      "homepage": null,
+      "updatedAt": "2025-09-12T19:16:57Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Browser-based chess game with a visual board, piece movement, and basic game logic implemented in HTML and JavaScript.",
+        "techStack": {
+          "languages": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": []
+        },
+        "architecture": "Single HTML page rendering an 8×8 board with CSS grid or table, JavaScript handling piece selection, legal move generation, turn management, and check/checkmate detection.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "index.html",
+          "chess.js",
+          "style.css"
+        ],
+        "setup": "Open index.html in a browser — no server needed",
+        "openQuestions": [
+          "Is there an AI opponent?",
+          "Are all special moves implemented (castling, en passant)?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "website",
+      "description": "chess",
+      "language": "CSS",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/website",
+      "homepage": null,
+      "updatedAt": "2025-09-12T19:15:08Z",
+      "topics": [],
+      "summary": {
+        "purpose": "CSS-focused chess-themed website — likely a landing page or portfolio piece with polished styling around a chess game or chess content.",
+        "techStack": {
+          "languages": [
+            "HTML",
+            "CSS"
+          ],
+          "frameworks": [],
+          "tools": []
+        },
+        "architecture": "Static site with a chess aesthetic: board-pattern backgrounds, piece imagery, and structured content sections showcasing CSS layout and animation techniques.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "style.css",
+          "index.html"
+        ],
+        "setup": "Open index.html — static, no build step",
+        "openQuestions": [
+          "Is this a showcase site or a playable game?",
+          "Does it embed the chess repo?"
+        ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
     }
