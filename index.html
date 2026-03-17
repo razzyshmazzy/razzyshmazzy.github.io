@@ -12,8 +12,8 @@
   <!-- marked.js — renders AI-generated Markdown summaries -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-  <!-- CoffeeScript 1.x — wires all filter/sort/search event handlers -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.12.7/coffee-script.min.js"></script>
+  <!-- CoffeeScript 2.x browser compiler (standalone, no require()) -->
+  <script src="https://cdn.jsdelivr.net/npm/coffeescript@2.7.0/lib/coffeescript-browser-compiler-legacy/coffeescript.js"></script>
 
   <!-- sql.js — stores and queries repo data with real SQL -->
   <script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.2/dist/sql-wasm.js"></script>
@@ -51,42 +51,6 @@
       min-height: 100vh;
     }
 
-    /* ── Nav ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.75rem 2rem;
-      background: rgba(13,17,23,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-weight: 700; font-size: 1.05rem;
-      background: linear-gradient(90deg, var(--accent), var(--purple));
-      background-clip: text; -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-decoration: none;
-    }
-
-    .nav-right { display: flex; align-items: center; gap: 1rem; }
-
-    #search-input {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text);
-      padding: 0.4rem 0.85rem; font-size: 0.875rem; width: 220px;
-      outline: none; transition: border-color 0.2s;
-    }
-    #search-input:focus { border-color: var(--accent); }
-    #search-input::placeholder { color: var(--muted); }
-
-    .nav-gh {
-      color: var(--muted); text-decoration: none; font-size: 0.875rem;
-      padding: 0.4rem 0.8rem; border: 1px solid var(--border);
-      border-radius: 8px; transition: color 0.2s, border-color 0.2s;
-    }
-    .nav-gh:hover { color: var(--text); border-color: var(--muted); }
-
     /* ── Hero ── */
     .hero {
       position: relative; height: 100svh; min-height: 560px;
@@ -113,7 +77,19 @@
     }
 
     .hero-sub {
-      font-size: 1.15rem; color: var(--muted); margin-bottom: 2.5rem;
+      font-size: 1.15rem; margin-bottom: 2.5rem;
+      font-family: 'Courier New', Courier, monospace; font-weight: 400; letter-spacing: 0.02em;
+      text-transform: lowercase;
+      color: #6b21a8;
+      animation: sparkle-violet 3.5s ease-in-out infinite;
+    }
+    @keyframes sparkle-violet {
+      0%   { color: #4a0e6e; text-shadow: 0 0 4px #4a0e6e44, 0 0 12px #2e065022; }
+      20%  { color: #7c3aed; text-shadow: 0 0 8px #7c3aed99, 0 0 22px #5b21b666, 0 0 40px #3b0764aa; }
+      40%  { color: #5b21b6; text-shadow: 0 0 5px #5b21b677, 0 0 16px #4c1d9544; }
+      60%  { color: #9333ea; text-shadow: 0 0 10px #9333eabb, 0 0 28px #7e22ce88, 0 0 50px #4a0e6ecc; }
+      80%  { color: #6d28d9; text-shadow: 0 0 6px #6d28d988, 0 0 18px #5b21b655; }
+      100% { color: #4a0e6e; text-shadow: 0 0 4px #4a0e6e44, 0 0 12px #2e065022; }
     }
 
     .stats-row {
@@ -137,13 +113,6 @@
       text-transform: uppercase; letter-spacing: 0.08em;
       margin-top: 0.3rem; display: block;
     }
-
-    .scroll-hint {
-      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em;
-      text-transform: uppercase; animation: bob 2s ease-in-out infinite;
-    }
-    @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
 
     /* ── Page wrapper ── */
     .page { max-width: 1320px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
@@ -358,21 +327,47 @@
       .stat-item:last-child { border-bottom: none; }
       #search-input { width: 140px; }
     }
+
+    /* ── Hero typewriter / split animation ── */
+    .hero-content { transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1); }
+    #hero-tail    { display: inline; transition: transform 0.5s ease-in, opacity 0.5s ease-in; }
+
+    /* ── README terminal ── */
+    #readme-terminal {
+      position: fixed; top: 8vh; right: 3vw;
+      width: 44vw; max-width: 680px; height: 80vh;
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 12px; display: flex; flex-direction: column;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.82rem; color: var(--text);
+      overflow: hidden; z-index: 200;
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    #readme-terminal.visible { opacity: 1; transform: translateY(0); }
+    .term-titlebar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0.55rem 1rem; display: flex; align-items: center; gap: 0.45rem;
+      flex-shrink: 0;
+    }
+    .term-dot   { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .term-title { margin-left: 0.6rem; font-size: 0.73rem; color: var(--muted);
+                  font-family: 'Courier New', Courier, monospace; }
+    .term-body  { padding: 1.1rem 1.25rem; overflow-y: auto; flex: 1;
+                  white-space: pre-wrap; word-break: break-word; line-height: 1.75; }
+    .term-cursor {
+      display: inline-block; width: 0.55em; height: 1em;
+      background: var(--accent); vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @media (max-width: 900px) {
+      #readme-terminal { width: 90vw; right: 5vw; top: auto; bottom: 2vh; height: 50vh; }
+    }
   </style>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════════════════
-     NAV
-     ══════════════════════════════════════════════════════ -->
-<nav class="nav">
-  <a class="nav-logo" href="#">razzyshmazzy</a>
-  <div class="nav-right">
-    <input id="search-input" type="search" placeholder="Search repos…" autocomplete="off">
-    <a class="nav-gh" href="https://github.com/razzyshmazzy" target="_blank" rel="noopener">GitHub ↗</a>
-  </div>
-</nav>
-
 
 <!-- ══════════════════════════════════════════════════════
      HERO  (GLSL animated background)
@@ -381,7 +376,7 @@
   <canvas id="hero-gl"></canvas>
 
   <div class="hero-content">
-    <h1 class="hero-name">razzyshmazzy</h1>
+    <h1 class="hero-name" id="hero-name-el"></h1>
     <p class="hero-sub">The home page of all things raz!</p>
 
     <!-- Stats filled by Python (Brython) -->
@@ -405,7 +400,6 @@
     </div>
   </div>
 
-  <span class="scroll-hint">↓ scroll</span>
 </header>
 
 
@@ -486,18 +480,19 @@
      PYTHON  (Brython) — computes portfolio statistics
      ══════════════════════════════════════════════════════ -->
 <script type="text/python">
-import json
-from browser import document
+# Use window.JSON.parse so we don't need brython_stdlib (saves ~4 MB)
+from browser import document, window
 
 raw = document["repos-json-data"].text
 if raw:
-    repos = json.loads(raw)
-    total  = len(repos)
-    stars  = sum(r.get("stars") or 0 for r in repos)
-
+    js_repos = window.JSON.parse(raw)
+    total = js_repos.length
+    stars = 0
     langs = {}
-    for r in repos:
-        lang = r.get("language") or "Unknown"
+    for i in range(total):
+        r    = js_repos[i]
+        stars += int(r.stars or 0)
+        lang  = str(r.language or "Unknown")
         langs[lang] = langs.get(lang, 0) + 1
 
     top = max(langs, key=langs.get) if langs else "—"
@@ -937,6 +932,7 @@ function initGLSL() {
     uniform float uTime;
     uniform vec2  uRes;
 
+    /* ── Hash & value noise ── */
     float hash(vec2 p) {
       p = fract(p * vec2(127.1, 311.7));
       p += dot(p, p + 45.32);
@@ -946,25 +942,75 @@ function initGLSL() {
       vec2 i = floor(p), f = fract(p);
       f = f * f * (3.0 - 2.0 * f);
       return mix(
-        mix(hash(i), hash(i + vec2(1,0)), f.x),
+        mix(hash(i),           hash(i + vec2(1,0)), f.x),
         mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x),
         f.y);
     }
+
+    /* ── Fractal Brownian Motion — 5 octaves ── */
+    float fbm(vec2 p) {
+      float v = 0.0, a = 0.5;
+      mat2 rot = mat2(0.8, -0.6, 0.6, 0.8);
+      for (int i = 0; i < 5; i++) {
+        v += a * noise(p);
+        p  = rot * p * 2.1;
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    /* ── Stars ── */
+    float stars(vec2 uv, float scale, float threshold) {
+      vec2 g = floor(uv * scale);
+      float h = hash(g);
+      if (h < threshold) return 0.0;
+      vec2 off = vec2(hash(g + 0.1), hash(g + 0.2)) - 0.5;
+      float d = length(fract(uv * scale) - 0.5 + off * 0.4);
+      float br = (h - threshold) / (1.0 - threshold);
+      return br * smoothstep(0.25, 0.0, d);
+    }
+
     void main() {
-      vec2 uv = gl_FragCoord.xy / uRes;
-      float t  = uTime * 0.07;
-      float n  = noise(uv * 2.0 + t);
-            n += 0.5  * noise(uv * 4.5 - t * 1.4);
-            n += 0.25 * noise(uv * 9.0 + t * 0.6);
-            n /= 1.75;
-      vec3 c1 = vec3(0.03, 0.05, 0.13);
-      vec3 c2 = vec3(0.07, 0.03, 0.18);
-      vec3 c3 = vec3(0.01, 0.07, 0.12);
-      vec3 col = mix(c1, c2, n);
-           col = mix(col, c3, noise(uv * 1.4 + t * 0.2) * 0.4);
-      vec2 q = uv - 0.5;
-      float vign = clamp(1.0 - dot(q * 1.7, q * 1.7), 0.45, 1.0);
-      gl_FragColor = vec4(col * vign, 1.0);
+      vec2 uv  = gl_FragCoord.xy / uRes;
+      float ar = uRes.x / uRes.y;
+      vec2 p   = vec2(uv.x * ar, uv.y);          /* aspect-corrected   */
+      float t  = uTime * 0.045;
+
+      /* Two drifting domain-warped fbm layers for cloud volume */
+      vec2 q  = vec2(fbm(p + t),          fbm(p + vec2(5.2, 1.3) + t * 0.7));
+      vec2 r  = vec2(fbm(p + 3.7*q + vec2(1.7, 9.2) - t * 0.5),
+                     fbm(p + 3.7*q + vec2(8.3, 2.8) + t * 0.4));
+      float cloud = fbm(p + 3.5 * r + t * 0.2);
+
+      /* Nebula colour palette: deep space → purple core → teal wisps */
+      vec3 space  = vec3(0.02, 0.02, 0.06);
+      vec3 purple = vec3(0.28, 0.05, 0.50);
+      vec3 blue   = vec3(0.04, 0.12, 0.45);
+      vec3 teal   = vec3(0.02, 0.30, 0.38);
+      vec3 pink   = vec3(0.45, 0.08, 0.25);
+
+      vec3 col = space;
+      col = mix(col, blue,   smoothstep(0.30, 0.55, cloud));
+      col = mix(col, purple, smoothstep(0.45, 0.65, cloud));
+      col = mix(col, teal,   smoothstep(0.55, 0.72, cloud) * fbm(p * 2.0 + t * 0.3));
+      col = mix(col, pink,   smoothstep(0.62, 0.78, cloud) * 0.6);
+      col += 0.12 * purple * smoothstep(0.2, 0.6, fbm(p * 3.5 - t * 0.6));
+
+      /* Brightness boost in the cloud core */
+      col += 0.08 * vec3(0.6, 0.4, 1.0) * pow(cloud, 3.0);
+
+      /* Stars — two scales, subtle twinkle */
+      float twinkle = 0.85 + 0.15 * sin(uTime * 2.3 + hash(floor(uv * 180.0)) * 40.0);
+      float s  = stars(uv, 180.0, 0.96) * twinkle;
+            s += stars(uv,  80.0, 0.975) * twinkle;
+      col += s * vec3(0.9, 0.95, 1.0);
+
+      /* Subtle vignette */
+      vec2 q2 = uv - 0.5;
+      float vign = clamp(1.0 - dot(q2 * 1.4, q2 * 1.4), 0.3, 1.0);
+      col *= vign;
+
+      gl_FragColor = vec4(col, 1.0);
     }`;
 
   function mkShader(type, src) {
@@ -1089,11 +1135,117 @@ document.getElementById('footer-pills').innerHTML =
 
 
 /* ───────────────────────────────────────────────
+   Hero name typewriter
+   (ports the Typewriter React component to vanilla JS)
+─────────────────────────────────────────────── */
+function heroTypewriter(el, texts, opts) {
+  const { speed = 100, deleteSpeed = 50, delay = 1500, onFirstComplete } = opts || {};
+  let textIdx = 0, charIdx = 0, deleting = false, firstDone = false;
+  const ctrl = { stopped: false };
+
+  function tick() {
+    if (ctrl.stopped) return;
+    const text = texts[textIdx] || '';
+    if (!deleting) {
+      if (charIdx < text.length) {
+        el.textContent = text.slice(0, ++charIdx);
+        setTimeout(tick, speed);
+      } else {
+        if (!firstDone) { firstDone = true; onFirstComplete?.(ctrl); }
+        setTimeout(() => { if (!ctrl.stopped) { deleting = true; tick(); } }, delay);
+      }
+    } else {
+      if (charIdx > 0) {
+        el.textContent = text.slice(0, --charIdx);
+        setTimeout(tick, deleteSpeed);
+      } else {
+        deleting = false;
+        textIdx = (textIdx + 1) % texts.length;
+        setTimeout(tick, speed);
+      }
+    }
+  }
+  tick();
+  return ctrl;
+}
+
+/* ───────────────────────────────────────────────
+   README terminal typewriter
+─────────────────────────────────────────────── */
+function showReadmeTerminal(text) {
+  const el = document.createElement('div');
+  el.id = 'readme-terminal';
+  el.innerHTML =
+    `<div class="term-titlebar">
+       <span class="term-dot" style="background:#ff5f57"></span>
+       <span class="term-dot" style="background:#febc2e"></span>
+       <span class="term-dot" style="background:#28c840"></span>
+       <span class="term-title">razzyshmazzy / README.md</span>
+     </div>
+     <div class="term-body" id="readme-body"><span class="term-cursor"></span></div>`;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+
+  const body   = document.getElementById('readme-body');
+  const cursor = body.querySelector('.term-cursor');
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      cursor.insertAdjacentText('beforebegin', text[i++]);
+      body.scrollTop = body.scrollHeight;
+      setTimeout(type, 14);
+    }
+  }
+  setTimeout(type, 450);
+}
+
+/* ───────────────────────────────────────────────
    Bootstrap — fetch repos.json, wire everything up
 ─────────────────────────────────────────────── */
 window.addEventListener('load', async () => {
   // Start GLSL immediately
   initGLSL();
+
+  // Hero name typewriter — cycles through strings, triggers split on first complete
+  const nameEl = document.getElementById('hero-name-el');
+  if (nameEl) {
+    heroTypewriter(nameEl, ['razzyshmazzy', 'a developer.', 'building things.'], {
+      speed: 85,
+      deleteSpeed: 45,
+      delay: 1600,
+      onFirstComplete(ctrl) {
+        setTimeout(() => {
+          ctrl.stopped = true;
+          const heroContent = document.querySelector('.hero-content');
+          // Split into raz + zyshmazzy spans
+          nameEl.innerHTML =
+            `<span id="hero-raz">raz</span><span id="hero-tail">zyshmazzy</span>`;
+          const tail = document.getElementById('hero-tail');
+          // Slide "zyshmazzy" left out
+          tail.style.transform = 'translateX(-2em)';
+          tail.style.opacity   = '0';
+          setTimeout(() => {
+            tail.style.visibility = 'hidden';
+            // Move "raz" to the left
+            if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
+            // Fetch README and open terminal
+            setTimeout(async () => {
+              let text = '# razzyshmazzy\n\nCould not load README.';
+              try {
+                for (const branch of ['main', 'master']) {
+                  const res = await fetch(
+                    `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
+                  );
+                  if (res.ok) { text = await res.text(); break; }
+                }
+              } catch (_) {}
+              showReadmeTerminal(text);
+            }, 750);
+          }, 560);
+        }, 1200);
+      }
+    });
+  }
 
   // Fetch repo data
   let data;
