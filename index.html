@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>razzyshmazzy — Portfolio</title>
+
+  <!-- Syntax highlighting for code snippets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- marked.js — renders AI-generated Markdown summaries -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- CoffeeScript 1.x — wires all filter/sort/search event handlers -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.12.7/coffee-script.min.js"></script>
+
+  <!-- sql.js — stores and queries repo data with real SQL -->
+  <script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.2/dist/sql-wasm.js"></script>
+
+  <!-- Brython — Python 3 in the browser, computes portfolio stats -->
+  <script src="https://cdn.jsdelivr.net/npm/brython@3.11.3/brython.min.js"></script>
+
+  <!-- Fengari — Lua 5.3 in the browser, manages filter state machine -->
+  <script src="https://cdn.jsdelivr.net/npm/fengari-web@0.1.4/dist/fengari-web.js"></script>
+
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --accent:   #58a6ff;
+      --green:    #7ee787;
+      --yellow:   #f1c40f;
+      --red:      #f87171;
+      --purple:   #a78bfa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 2rem;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-weight: 700; font-size: 1.05rem;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      background-clip: text; -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+
+    #search-input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      padding: 0.4rem 0.85rem; font-size: 0.875rem; width: 220px;
+      outline: none; transition: border-color 0.2s;
+    }
+    #search-input:focus { border-color: var(--accent); }
+    #search-input::placeholder { color: var(--muted); }
+
+    .nav-gh {
+      color: var(--muted); text-decoration: none; font-size: 0.875rem;
+      padding: 0.4rem 0.8rem; border: 1px solid var(--border);
+      border-radius: 8px; transition: color 0.2s, border-color 0.2s;
+    }
+    .nav-gh:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; height: 100svh; min-height: 560px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    #hero-gl {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: block;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1; text-align: center; padding: 2rem;
+    }
+
+    .hero-name {
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #e6edf3 0%, #8b949e 50%, var(--accent) 100%);
+      background-clip: text; -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted); margin-bottom: 2.5rem;
+    }
+
+    .stats-row {
+      display: inline-flex; gap: 0; border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      background: rgba(22,27,34,0.7); backdrop-filter: blur(8px);
+    }
+
+    .stat-item {
+      padding: 0.9rem 1.6rem; text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 1.6rem; font-weight: 700; line-height: 1;
+      color: var(--text); display: block;
+    }
+    .stat-label {
+      font-size: 0.72rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 0.3rem; display: block;
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em;
+      text-transform: uppercase; animation: bob 2s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+    /* ── Page wrapper ── */
+    .page { max-width: 1320px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 0.75rem;
+      flex-wrap: wrap; margin-bottom: 1.75rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .filter-label { font-size: 0.75rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap; }
+
+    .lang-btn {
+      padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.78rem;
+      font-weight: 600; cursor: pointer; border: 1px solid transparent;
+      background: transparent; color: var(--muted);
+      transition: all 0.15s; letter-spacing: 0.03em;
+    }
+    .lang-btn:hover { color: var(--text); border-color: var(--border); }
+    .lang-btn.active { background: var(--accent); color: #0d1117;
+      border-color: var(--accent); }
+
+    .filter-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+    #sort-select {
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 8px; color: var(--muted); padding: 0.3rem 0.65rem;
+      font-size: 0.8rem; cursor: pointer; outline: none;
+    }
+    #sort-select:focus { border-color: var(--accent); color: var(--text); }
+    #sort-select option { background: var(--surface); }
+
+    /* ── Repos grid ── */
+    .repos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .repo-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .repo-card:hover { border-color: var(--muted); transform: translateY(-2px); }
+
+    .card-top {
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    }
+
+    .repo-name-link {
+      font-size: 1rem; font-weight: 700; color: var(--accent);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .repo-name-link:hover { color: #79c0ff; }
+
+    .repo-desc { font-size: 0.875rem; color: var(--muted); }
+
+    /* Summary box */
+    .summary-box {
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.85rem 1rem;
+      display: flex; flex-direction: column; gap: 0.5rem; flex: 1;
+    }
+
+    .summary-purpose {
+      font-size: 0.85rem; color: var(--text); line-height: 1.55;
+    }
+
+    .tech-pills {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.15rem;
+    }
+
+    .tech-pill {
+      font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px;
+      background: rgba(88,166,255,0.1); color: var(--accent);
+      border: 1px solid rgba(88,166,255,0.2);
+    }
+
+    .summary-arch {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.55;
+      border-top: 1px solid var(--border); padding-top: 0.5rem;
+    }
+
+    .card-meta {
+      display: flex; align-items: center; gap: 0.85rem;
+      font-size: 0.78rem; color: var(--muted); flex-wrap: wrap;
+    }
+
+    .card-meta-link {
+      margin-left: auto; color: var(--muted); text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.2rem 0.6rem; font-size: 0.75rem;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .card-meta-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* Language badges */
+    .lang-badge {
+      font-size: 0.68rem; font-weight: 700; padding: 0.18rem 0.55rem;
+      border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-js     { background:#f1e05a12;color:#f1c40f;border:1px solid #f1e05a25; }
+    .badge-html   { background:#e34c2612;color:#e34c26;border:1px solid #e34c2625; }
+    .badge-css    { background:#264de412;color:#4285f4;border:1px solid #264de425; }
+    .badge-java   { background:#b0721912;color:#f89820;border:1px solid #b0721925; }
+    .badge-python { background:#3572a512;color:#4ec9b0;border:1px solid #3572a525; }
+    .badge-ts     { background:#3178c612;color:#3178c6;border:1px solid #3178c625; }
+    .badge-go     { background:#00add812;color:#00ADD8;border:1px solid #00add825; }
+    .badge-rust   { background:#dea58412;color:#dea584;border:1px solid #dea58425; }
+    .badge-ruby   { background:#70111112;color:#CC342D;border:1px solid #70111125; }
+    .badge-md     { background:#083fa112;color:#58a6ff;border:1px solid #083fa125; }
+    .badge-null   { background:#8b949e12;color:#8b949e;border:1px solid #8b949e25; }
+
+    /* Empty/loading states */
+    .grid-empty {
+      grid-column: 1 / -1; text-align: center;
+      padding: 4rem 2rem; color: var(--muted); font-size: 0.95rem;
+    }
+
+    /* ── Language chart ── */
+    .chart-section {
+      margin-top: 3rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.75rem 2rem;
+    }
+
+    .chart-section h2 {
+      font-size: 1rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.5rem;
+    }
+
+    .chart-wrapper {
+      display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap;
+    }
+
+    #donut-svg {
+      width: 180px; height: 180px; flex-shrink: 0;
+    }
+
+    #chart-legend {
+      display: flex; flex-direction: column; gap: 0.55rem;
+    }
+
+    .legend-item {
+      display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem;
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    .legend-name { color: var(--text); flex: 1; }
+    .legend-count { color: var(--muted); font-size: 0.78rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); margin-top: 4rem;
+      padding: 2rem; text-align: center;
+      color: var(--muted); font-size: 0.875rem;
+    }
+
+    .lang-pills-row {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0.4rem; margin-top: 0.85rem;
+    }
+
+    .footer-pill {
+      font-size: 0.68rem; padding: 0.18rem 0.55rem; border-radius: 20px;
+      border: 1px solid var(--border); color: var(--muted);
+    }
+
+    /* ── BF Easter egg modal ── */
+    #bf-modal {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    #bf-modal.show { display: flex; }
+
+    #bf-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem; max-width: 420px; width: 90%;
+      text-align: center;
+    }
+    #bf-box h2 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+    #bf-box pre {
+      font-size: 0.72rem; color: var(--muted); overflow-x: auto;
+      line-height: 1.6; text-align: left; margin: 1rem 0;
+      background: #0d1117; padding: 0.85rem; border-radius: 8px;
+    }
+    #bf-output-modal {
+      font-size: 2rem; font-weight: 700; color: var(--green); margin: 1rem 0;
+    }
+    #bf-close {
+      margin-top: 0.5rem; cursor: pointer; background: transparent;
+      border: 1px solid var(--border); color: var(--muted);
+      border-radius: 8px; padding: 0.4rem 1.2rem; font-size: 0.85rem;
+    }
+    #bf-close:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .nav { padding: 0.65rem 1rem; }
+      .stats-row { flex-direction: column; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat-item:last-child { border-bottom: none; }
+      #search-input { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     NAV
+     ══════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="nav-logo" href="#">razzyshmazzy</a>
+  <div class="nav-right">
+    <input id="search-input" type="search" placeholder="Search repos…" autocomplete="off">
+    <a class="nav-gh" href="https://github.com/razzyshmazzy" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════════════
+     HERO  (GLSL animated background)
+     ══════════════════════════════════════════════════════ -->
+<header class="hero">
+  <canvas id="hero-gl"></canvas>
+
+  <div class="hero-content">
+    <h1 class="hero-name">razzyshmazzy</h1>
+    <p class="hero-sub">The home page of all things raz!</p>
+
+    <!-- Stats filled by Python (Brython) -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-value" id="stat-repos">—</span>
+        <span class="stat-label">repos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-langs">—</span>
+        <span class="stat-label">languages</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-stars">—</span>
+        <span class="stat-label">stars</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-top-lang">—</span>
+        <span class="stat-label">top lang</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="scroll-hint">↓ scroll</span>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN CONTENT
+     ══════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- Filter bar — buttons injected by JS, events wired by CoffeeScript,
+       state managed by the Lua state machine                            -->
+  <div class="filter-bar" id="filter-bar">
+    <span class="filter-label">Language</span>
+    <div id="lang-filter-group" style="display:flex;flex-wrap:wrap;gap:0.4rem"></div>
+    <div class="filter-sep"></div>
+    <span class="filter-label">Sort</span>
+    <select id="sort-select">
+      <option value="updatedAt">Recently updated</option>
+      <option value="name">Name A–Z</option>
+      <option value="stars">Most stars</option>
+    </select>
+  </div>
+
+  <!-- Repo grid — rendered by JS, queried via sql.js, searched via WASM -->
+  <div id="repos-grid" class="repos-grid">
+    <div class="grid-empty">Loading repositories…</div>
+  </div>
+
+  <!-- Language distribution — SVG donut chart rendered by JS -->
+  <section class="chart-section">
+    <h2>Language Distribution</h2>
+    <div class="chart-wrapper">
+      <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="chart-legend"></div>
+    </div>
+  </section>
+
+</div><!-- .page -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════ -->
+<footer>
+  <p>
+    Built with <strong style="color:var(--text)">13 programming languages</strong>
+    &mdash; last synced <span id="last-synced">—</span>
+  </p>
+  <div class="lang-pills-row" id="footer-pills"></div>
+  <p style="margin-top:1rem;font-size:0.75rem">
+    Press <kbd style="background:var(--surface);border:1px solid var(--border);
+    border-radius:4px;padding:0.1rem 0.4rem">Ctrl+B</kbd> for a surprise
+  </p>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════
+     BRAINFUCK EASTER EGG MODAL
+     ══════════════════════════════════════════════════════ -->
+<div id="bf-modal">
+  <div id="bf-box">
+    <h2>🧠 Brainfuck Easter Egg</h2>
+    <pre id="bf-code-display">+++++++++[>++++++++&lt;-]>.
+++++++++++++++++++++++++
++++++++++.
+[-]+++++++++++++++++++++
+++++++++++++++.</pre>
+    <div id="bf-output-modal"></div>
+    <button id="bf-close">Close</button>
+  </div>
+</div>
+
+
+<!-- Hidden data channel for Python / Lua -->
+<div id="repos-json-data" style="display:none"></div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     PYTHON  (Brython) — computes portfolio statistics
+     ══════════════════════════════════════════════════════ -->
+<script type="text/python">
+import json
+from browser import document
+
+raw = document["repos-json-data"].text
+if raw:
+    repos = json.loads(raw)
+    total  = len(repos)
+    stars  = sum(r.get("stars") or 0 for r in repos)
+
+    langs = {}
+    for r in repos:
+        lang = r.get("language") or "Unknown"
+        langs[lang] = langs.get(lang, 0) + 1
+
+    top = max(langs, key=langs.get) if langs else "—"
+
+    document["stat-repos"].text    = str(total)
+    document["stat-stars"].text    = str(stars)
+    document["stat-langs"].text    = str(len(langs))
+    document["stat-top-lang"].text = top
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════
+     LUA  (Fengari) — filter state machine
+     Exposes luaSetLanguage / luaSetSort / luaGetState
+     so JS and CoffeeScript can drive the filter.
+     ══════════════════════════════════════════════════════ -->
+<script type="application/lua">
+local js     = require("js")
+local window = js.global
+
+local state = { language = "all", sort = "updatedAt" }
+
+-- Called by CoffeeScript when a language button is clicked
+window.luaSetLanguage = function(lang)
+    state.language = lang
+    if window.onFilterChange then window:onFilterChange() end
+end
+
+-- Called by CoffeeScript when the sort dropdown changes
+window.luaSetSort = function(sort)
+    state.sort = sort
+    if window.onFilterChange then window:onFilterChange() end
+end
+
+-- Called by JS to read current filter state
+window.luaGetState = function()
+    local obj = js.new(js.global.Object)
+    obj.language = state.language
+    obj.sort     = state.sort
+    return obj
+end
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════
+     COFFEESCRIPT — wires all UI events using delegation
+     so it works even before JS renders the filter buttons
+     ══════════════════════════════════════════════════════ -->
+<script type="text/coffeescript">
+# Language filter buttons (event delegation on the container)
+langGroup = document.getElementById 'lang-filter-group'
+langGroup?.addEventListener 'click', (e) ->
+  btn = e.target.closest '.lang-btn'
+  if btn
+    langGroup.querySelectorAll('.lang-btn').forEach (b) -> b.classList.remove 'active'
+    btn.classList.add 'active'
+    window.luaSetLanguage? btn.dataset.lang
+
+# Sort dropdown
+sortSelect = document.getElementById 'sort-select'
+sortSelect?.addEventListener 'change', ->
+  window.luaSetSort? sortSelect.value
+
+# Search input — debounced
+searchTimer = null
+searchInput = document.getElementById 'search-input'
+searchInput?.addEventListener 'input', (e) ->
+  clearTimeout searchTimer
+  searchTimer = setTimeout (-> window.onSearch? e.target.value), 180
+
+# Ctrl+B — Brainfuck easter egg
+document.addEventListener 'keydown', (e) ->
+  if e.ctrlKey and e.key is 'b'
+    e.preventDefault()
+    window.showBFEaster?()
+
+# Close BF modal on backdrop click
+document.getElementById('bf-modal')?.addEventListener 'click', (e) ->
+  if e.target.id is 'bf-modal'
+    window.closeBFEaster?()
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN JAVASCRIPT
+     ══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ───────────────────────────────────────────────
+   WASM — fuzzy search scoring
+   WAT source (hand-encoded to binary):
+     (module
+       (func (export "score")
+         (param $matches i32) (param $qlen i32)
+         (result f32)
+         (if (result f32) (i32.eqz (local.get 1))
+           (then (f32.const 1))
+           (else (f32.div
+             (f32.convert_i32_u (local.get 0))
+             (f32.convert_i32_u (local.get 1)))))))
+─────────────────────────────────────────────── */
+let wasmScoreFn = null;
+
+(async () => {
+  try {
+    const bytes = new Uint8Array([
+      0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00, // magic + version
+      0x01, 0x07, 0x01, 0x60, 0x02, 0x7f, 0x7f, 0x01, 0x7d, // type: (i32,i32)→f32
+      0x03, 0x02, 0x01, 0x00,                          // function section
+      0x07, 0x09, 0x01, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x00, 0x00, // export "score"
+      0x0a, 0x17, 0x01, 0x15, 0x00,                    // code section header
+      0x20, 0x01, 0x45, 0x04, 0x7d,                    // local.get 1, i32.eqz, if f32
+      0x43, 0x00, 0x00, 0x80, 0x3f,                    // f32.const 1.0
+      0x05,                                            // else
+      0x20, 0x00, 0xb3,                                // local.get 0, f32.convert_i32_u
+      0x20, 0x01, 0xb3,                                // local.get 1, f32.convert_i32_u
+      0x95, 0x0b, 0x0b,                                // f32.div, end, end
+    ]);
+    const { instance } = await WebAssembly.instantiate(bytes);
+    wasmScoreFn = instance.exports.score;
+  } catch (e) {
+    console.warn('WASM load failed, falling back to JS scorer:', e);
+  }
+})();
+
+/** Compute fuzzy subsequence match score using WASM (or JS fallback) */
+function fuzzyScore(query, text) {
+  const q = query.toLowerCase();
+  const t = text.toLowerCase();
+  let qi = 0, matches = 0;
+  for (let ti = 0; ti < t.length && qi < q.length; ti++) {
+    if (t[ti] === q[qi]) { matches++; qi++; }
+  }
+  return wasmScoreFn
+    ? wasmScoreFn(matches, q.length)
+    : (q.length ? matches / q.length : 1);
+}
+
+
+/* ───────────────────────────────────────────────
+   Language metadata
+─────────────────────────────────────────────── */
+const LANG_BADGE = {
+  JavaScript: 'badge-js',  TypeScript: 'badge-ts',
+  HTML:       'badge-html', CSS:       'badge-css',
+  Java:       'badge-java', Python:    'badge-python',
+  Go:         'badge-go',   Rust:      'badge-rust',
+  Ruby:       'badge-ruby',
+};
+
+const LANG_COLOR = {
+  JavaScript: '#f1c40f', TypeScript: '#3178c6',
+  HTML:       '#e34c26', CSS:        '#264de4',
+  Java:       '#b07219', Python:     '#3572a5',
+  Go:         '#00ADD8', Rust:       '#dea584',
+  Ruby:       '#CC342D',
+};
+
+function badgeClass(lang) { return LANG_BADGE[lang] || 'badge-null'; }
+function langColor(lang)  { return LANG_COLOR[lang] || '#8b949e'; }
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 3600)    return `${Math.floor(s / 60)}m ago`;
+  if (s < 86400)   return `${Math.floor(s / 3600)}h ago`;
+  if (s < 2592000) return `${Math.floor(s / 86400)}d ago`;
+  return `${Math.floor(s / 2592000)}mo ago`;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+/* ───────────────────────────────────────────────
+   State
+─────────────────────────────────────────────── */
+let db            = null;
+let ALL_REPOS     = [];
+let searchQuery   = '';
+
+
+/* ───────────────────────────────────────────────
+   SQL.js — initialise DB and insert repos
+─────────────────────────────────────────────── */
+async function initDB(repos) {
+  const SQL = await initSqlJs({
+    locateFile: f => `https://cdn.jsdelivr.net/npm/sql.js@1.10.2/dist/${f}`
+  });
+  db = new SQL.Database();
+  db.run(`
+    CREATE TABLE repos (
+      name        TEXT,
+      description TEXT,
+      language    TEXT,
+      stars       INTEGER,
+      url         TEXT,
+      updatedAt   TEXT,
+      summaryJson TEXT
+    )
+  `);
+  const stmt = db.prepare(
+    `INSERT INTO repos VALUES (?,?,?,?,?,?,?)`
+  );
+  repos.forEach(r => stmt.run([
+    r.name, r.description || '', r.language || '',
+    r.stars || 0, r.url, r.updatedAt,
+    r.summary ? JSON.stringify(r.summary) : null,
+  ]));
+  stmt.free();
+}
+
+
+/* ───────────────────────────────────────────────
+   Render a single repo card
+─────────────────────────────────────────────── */
+function renderCard(repo) {
+  const s = repo.summary;
+  const techItems = s
+    ? [...(s.techStack?.languages || []), ...(s.techStack?.frameworks || [])].slice(0, 5)
+    : [];
+
+  const pills = techItems
+    .map(t => `<span class="tech-pill">${esc(t)}</span>`)
+    .join('');
+
+  return `
+    <article class="repo-card">
+      <div class="card-top">
+        <a class="repo-name-link" href="${esc(repo.url)}" target="_blank" rel="noopener">${esc(repo.name)}</a>
+        ${repo.language
+          ? `<span class="lang-badge ${badgeClass(repo.language)}">${esc(repo.language)}</span>`
+          : ''}
+      </div>
+      ${repo.description
+        ? `<p class="repo-desc">${esc(repo.description)}</p>`
+        : ''}
+      <div class="summary-box">
+        ${s
+          ? `<p class="summary-purpose">${esc(s.purpose)}</p>
+             ${pills ? `<div class="tech-pills">${pills}</div>` : ''}
+             ${s.architecture
+               ? `<p class="summary-arch">${esc(s.architecture.slice(0, 160))}${s.architecture.length > 160 ? '…' : ''}</p>`
+               : ''}`
+          : '<p style="color:var(--muted);font-size:0.82rem">🔍 Analysis pending — runs nightly via GitHub Actions.</p>'
+        }
+      </div>
+      <div class="card-meta">
+        ${repo.stars ? `<span>⭐ ${repo.stars}</span>` : ''}
+        <span>${timeAgo(repo.updatedAt)}</span>
+        <a class="card-meta-link" href="${esc(repo.url)}" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </article>`;
+}
+
+
+/* ───────────────────────────────────────────────
+   Query SQL and apply WASM fuzzy search
+─────────────────────────────────────────────── */
+function queryRepos() {
+  const state = (typeof window.luaGetState === 'function')
+    ? window.luaGetState()
+    : { language: 'all', sort: 'updatedAt' };
+
+  const lang = state.language || 'all';
+  const sort = state.sort || 'updatedAt';
+
+  if (!db) return ALL_REPOS;
+
+  let sql = 'SELECT * FROM repos WHERE 1=1';
+  const params = {};
+
+  if (lang && lang !== 'all') {
+    sql += ' AND language = $lang';
+    params['$lang'] = lang;
+  }
+
+  const orderCol = sort === 'name' ? 'name' : sort === 'stars' ? 'stars' : 'updatedAt';
+  const orderDir = sort === 'name' ? 'ASC' : 'DESC';
+  sql += ` ORDER BY ${orderCol} ${orderDir}`;
+
+  let results;
+  try {
+    const res = db.exec(sql, params);
+    if (!res.length) return [];
+    const { columns, values } = res[0];
+    results = values.map(row => {
+      const obj = {};
+      columns.forEach((col, i) => obj[col] = row[i]);
+      obj.summary = obj.summaryJson ? JSON.parse(obj.summaryJson) : null;
+      return obj;
+    });
+  } catch (e) {
+    console.warn('SQL error:', e);
+    return ALL_REPOS;
+  }
+
+  // Apply WASM fuzzy search
+  if (searchQuery.trim()) {
+    const q = searchQuery.trim();
+    results = results
+      .map(r => ({
+        ...r,
+        _score: Math.max(
+          fuzzyScore(q, r.name),
+          fuzzyScore(q, r.description || '') * 0.7,
+          fuzzyScore(q, r.language || '') * 0.5,
+        ),
+      }))
+      .filter(r => r._score > 0.3)
+      .sort((a, b) => b._score - a._score);
+  }
+
+  return results;
+}
+
+
+/* ───────────────────────────────────────────────
+   Render the repo grid
+─────────────────────────────────────────────── */
+function renderGrid() {
+  const repos = queryRepos();
+  const grid  = document.getElementById('repos-grid');
+
+  if (!repos.length) {
+    grid.innerHTML = '<div class="grid-empty">No repos match your search.</div>';
+    return;
+  }
+
+  grid.innerHTML = repos.map(renderCard).join('');
+}
+
+
+/* ───────────────────────────────────────────────
+   Filter/search callbacks (called by Lua + CoffeeScript)
+─────────────────────────────────────────────── */
+window.onFilterChange = renderGrid;
+
+window.onSearch = function(query) {
+  searchQuery = query;
+  renderGrid();
+};
+
+
+/* ───────────────────────────────────────────────
+   SVG donut chart — language distribution
+─────────────────────────────────────────────── */
+function renderChart(repos) {
+  const langs = {};
+  repos.forEach(r => {
+    const l = r.language || 'Unknown';
+    langs[l] = (langs[l] || 0) + 1;
+  });
+
+  const total   = repos.length;
+  const entries = Object.entries(langs).sort((a, b) => b[1] - a[1]);
+  const svg     = document.getElementById('donut-svg');
+  const legend  = document.getElementById('chart-legend');
+  svg.innerHTML = '';
+
+  const cx = 100, cy = 100, R = 82, r = 52;
+  let angle = -Math.PI / 2;
+
+  entries.forEach(([lang, count]) => {
+    const slice    = (count / total) * 2 * Math.PI;
+    const end      = angle + slice;
+    const color    = langColor(lang);
+    const largeArc = slice > Math.PI ? 1 : 0;
+
+    if (entries.length === 1) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+      c.setAttribute('r', (R + r) / 2);
+      c.setAttribute('fill', 'none');
+      c.setAttribute('stroke', color);
+      c.setAttribute('stroke-width', R - r);
+      svg.appendChild(c);
+    } else {
+      const x1 = cx + R * Math.cos(angle),   y1 = cy + R * Math.sin(angle);
+      const x2 = cx + R * Math.cos(end),     y2 = cy + R * Math.sin(end);
+      const ix1 = cx + r * Math.cos(end),    iy1 = cy + r * Math.sin(end);
+      const ix2 = cx + r * Math.cos(angle),  iy2 = cy + r * Math.sin(angle);
+
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d',
+        `M ${x1} ${y1} A ${R} ${R} 0 ${largeArc} 1 ${x2} ${y2} ` +
+        `L ${ix1} ${iy1} A ${r} ${r} 0 ${largeArc} 0 ${ix2} ${iy2} Z`
+      );
+      p.setAttribute('fill', color);
+      p.style.cursor = 'pointer';
+      p.title = lang;
+      svg.appendChild(p);
+    }
+    angle = end;
+  });
+
+  // Centre label (total repos)
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', cx); t.setAttribute('y', cy - 4);
+  t.setAttribute('text-anchor', 'middle'); t.setAttribute('fill', '#e6edf3');
+  t.setAttribute('font-size', '22'); t.setAttribute('font-weight', '700');
+  t.textContent = total;
+  const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t2.setAttribute('x', cx); t2.setAttribute('y', cy + 14);
+  t2.setAttribute('text-anchor', 'middle'); t2.setAttribute('fill', '#8b949e');
+  t2.setAttribute('font-size', '10');
+  t2.textContent = 'repos';
+  svg.appendChild(t); svg.appendChild(t2);
+
+  // Legend
+  legend.innerHTML = entries.map(([lang, count]) => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${langColor(lang)}"></span>
+      <span class="legend-name">${lang}</span>
+      <span class="legend-count">${count}</span>
+    </div>`).join('');
+}
+
+
+/* ───────────────────────────────────────────────
+   GLSL hero background
+─────────────────────────────────────────────── */
+function initGLSL() {
+  const canvas = document.getElementById('hero-gl');
+  const gl = canvas.getContext('webgl');
+  if (!gl) return;
+
+  const vSrc = `
+    attribute vec2 aPos;
+    void main() { gl_Position = vec4(aPos, 0.0, 1.0); }`;
+
+  const fSrc = `
+    precision mediump float;
+    uniform float uTime;
+    uniform vec2  uRes;
+
+    float hash(vec2 p) {
+      p = fract(p * vec2(127.1, 311.7));
+      p += dot(p, p + 45.32);
+      return fract(p.x * p.y);
+    }
+    float noise(vec2 p) {
+      vec2 i = floor(p), f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(
+        mix(hash(i), hash(i + vec2(1,0)), f.x),
+        mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x),
+        f.y);
+    }
+    void main() {
+      vec2 uv = gl_FragCoord.xy / uRes;
+      float t  = uTime * 0.07;
+      float n  = noise(uv * 2.0 + t);
+            n += 0.5  * noise(uv * 4.5 - t * 1.4);
+            n += 0.25 * noise(uv * 9.0 + t * 0.6);
+            n /= 1.75;
+      vec3 c1 = vec3(0.03, 0.05, 0.13);
+      vec3 c2 = vec3(0.07, 0.03, 0.18);
+      vec3 c3 = vec3(0.01, 0.07, 0.12);
+      vec3 col = mix(c1, c2, n);
+           col = mix(col, c3, noise(uv * 1.4 + t * 0.2) * 0.4);
+      vec2 q = uv - 0.5;
+      float vign = clamp(1.0 - dot(q * 1.7, q * 1.7), 0.45, 1.0);
+      gl_FragColor = vec4(col * vign, 1.0);
+    }`;
+
+  function mkShader(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    return s;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vSrc));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fSrc));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER,
+    new Float32Array([-1,-1, 1,-1, -1,1,  -1,1, 1,-1, 1,1]),
+    gl.STATIC_DRAW);
+
+  const aPos  = gl.getAttribLocation(prog, 'aPos');
+  const uTime = gl.getUniformLocation(prog, 'uTime');
+  const uRes  = gl.getUniformLocation(prog, 'uRes');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const t0 = performance.now();
+
+  function frame() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+    gl.uniform1f(uTime, (performance.now() - t0) / 1000);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+
+/* ───────────────────────────────────────────────
+   Brainfuck easter egg
+─────────────────────────────────────────────── */
+function runBF(src) {
+  const tape = new Uint8Array(30000);
+  let dp = 0, ip = 0, out = '';
+  const jmp = {};
+  const stack = [];
+  for (let i = 0; i < src.length; i++) {
+    if      (src[i] === '[') stack.push(i);
+    else if (src[i] === ']') { const j = stack.pop(); jmp[j] = i; jmp[i] = j; }
+  }
+  while (ip < src.length && out.length < 500) {
+    switch (src[ip]) {
+      case '>': dp++;  break;
+      case '<': dp--;  break;
+      case '+': tape[dp] = (tape[dp] + 1) & 0xff; break;
+      case '-': tape[dp] = (tape[dp] - 1) & 0xff; break;
+      case '.': out += String.fromCharCode(tape[dp]); break;
+      case '[': if (!tape[dp]) ip = jmp[ip]; break;
+      case ']': if  (tape[dp]) ip = jmp[ip]; break;
+    }
+    ip++;
+  }
+  return out;
+}
+
+// "Hi!" in Brainfuck
+const BF_CODE =
+  '+++++++++[>++++++++<-]>.' +           // H = 72
+  '+++++++++++++++++++++++++++++++++.' +  // i = 72+33 = 105
+  '[-]' +                                // zero cell
+  '+++++++++++++++++++++++++++++++++.';  // ! = 33
+
+window.showBFEaster = function() {
+  document.getElementById('bf-output-modal').textContent = runBF(BF_CODE);
+  document.getElementById('bf-modal').classList.add('show');
+};
+window.closeBFEaster = function() {
+  document.getElementById('bf-modal').classList.remove('show');
+};
+document.getElementById('bf-close').onclick = window.closeBFEaster;
+
+
+/* ───────────────────────────────────────────────
+   Language filter buttons (rendered by JS)
+─────────────────────────────────────────────── */
+function renderFilterButtons(repos) {
+  const langs = [...new Set(repos.map(r => r.language).filter(Boolean))].sort();
+  const group = document.getElementById('lang-filter-group');
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'lang-btn active';
+  allBtn.textContent = 'All';
+  allBtn.dataset.lang = 'all';
+  group.appendChild(allBtn);
+
+  langs.forEach(lang => {
+    const btn = document.createElement('button');
+    btn.className = 'lang-btn';
+    btn.textContent = lang;
+    btn.dataset.lang = lang;
+    // dot colour
+    btn.style.borderLeftColor = langColor(lang);
+    group.appendChild(btn);
+  });
+}
+
+
+/* ───────────────────────────────────────────────
+   Footer language pills
+─────────────────────────────────────────────── */
+const PORTFOLIO_LANGS = [
+  'HTML','CSS','JavaScript','WebAssembly','Python','Lua',
+  'SQL','Markdown','GLSL','SVG','JSON','CoffeeScript','Brainfuck'
+];
+document.getElementById('footer-pills').innerHTML =
+  PORTFOLIO_LANGS.map(l => `<span class="footer-pill">${l}</span>`).join('');
+
+
+/* ───────────────────────────────────────────────
+   Bootstrap — fetch repos.json, wire everything up
+─────────────────────────────────────────────── */
+window.addEventListener('load', async () => {
+  // Start GLSL immediately
+  initGLSL();
+
+  // Fetch repo data
+  let data;
+  try {
+    const res = await fetch('./repos.json');
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('repos-grid').innerHTML =
+      '<div class="grid-empty">Could not load repos.json — make sure it exists in the repo root.</div>';
+    return;
+  }
+
+  ALL_REPOS = data.repos || [];
+
+  // Update last-synced timestamp
+  if (data.lastUpdated) {
+    document.getElementById('last-synced').textContent = timeAgo(data.lastUpdated);
+  }
+
+  // Populate SQL database
+  try {
+    await initDB(ALL_REPOS);
+  } catch (e) {
+    console.warn('sql.js init failed:', e);
+  }
+
+  // Pass JSON to Python via DOM (then call brython)
+  document.getElementById('repos-json-data').textContent = JSON.stringify(ALL_REPOS);
+  if (typeof brython !== 'undefined') brython();
+
+  // Render filter buttons, grid, and chart
+  renderFilterButtons(ALL_REPOS);
+  renderGrid();
+  renderChart(ALL_REPOS);
+
+  // highlight.js for any code blocks
+  if (typeof hljs !== 'undefined') {
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+  }
+});
+</script>
+
+</body>
+</html>

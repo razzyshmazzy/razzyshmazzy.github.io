@@ -4,15 +4,15 @@ alright, so let's plan this.
 2. should have a template to list all files/projects
     ideas: desktop -> copy mc one? or something similar?
 3. any other functionality:
-    ideas: 
+    ideas: write in assembly, c, or some esoteric language
 
 but also remember to:
-    - do math hw
-    - do history skills
     - turn in walk virtue service -> find qs on mc connect
     - look up internships -> maybe exploratorium
-    - sign up for lancerhacks
+    - sign up for viking hacks
     - redeem money -> get bank thing (ss)
     - work on inspirit project
     - finalize junior fellowship with stanley
     - finish Digging Deepers for rest of my colleges
+    - call Northwestern to figure out CAESAR
+    - do Harvard DCE email
