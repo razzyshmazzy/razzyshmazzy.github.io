@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>razzyshmazzy — Portfolio</title>
 
+  <!-- Orbitron font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+
   <!-- Syntax highlighting for code snippets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -69,6 +74,7 @@
 
     .hero-name {
       font-size: clamp(2.8rem, 7vw, 5rem);
+      font-family: 'Orbitron', sans-serif;
       font-weight: 800; letter-spacing: -0.03em;
       background: linear-gradient(135deg, #e6edf3 0%, #8b949e 50%, var(--accent) 100%);
       background-clip: text; -webkit-background-clip: text;
@@ -78,18 +84,17 @@
 
     .hero-sub {
       font-size: 1.15rem; margin-bottom: 2.5rem;
-      font-family: 'Courier New', Courier, monospace; font-weight: 400; letter-spacing: 0.02em;
+      font-family: 'Orbitron', sans-serif; font-weight: 400; letter-spacing: 0.02em;
       text-transform: lowercase;
-      color: #6b21a8;
-      animation: sparkle-violet 3.5s ease-in-out infinite;
+      color: #72708a;
+      animation: sparkle-violet 4s ease-in-out infinite;
     }
     @keyframes sparkle-violet {
-      0%   { color: #4a0e6e; text-shadow: 0 0 4px #4a0e6e44, 0 0 12px #2e065022; }
-      20%  { color: #7c3aed; text-shadow: 0 0 8px #7c3aed99, 0 0 22px #5b21b666, 0 0 40px #3b0764aa; }
-      40%  { color: #5b21b6; text-shadow: 0 0 5px #5b21b677, 0 0 16px #4c1d9544; }
-      60%  { color: #9333ea; text-shadow: 0 0 10px #9333eabb, 0 0 28px #7e22ce88, 0 0 50px #4a0e6ecc; }
-      80%  { color: #6d28d9; text-shadow: 0 0 6px #6d28d988, 0 0 18px #5b21b655; }
-      100% { color: #4a0e6e; text-shadow: 0 0 4px #4a0e6e44, 0 0 12px #2e065022; }
+      0%   { color: #686678; text-shadow: 0 0 3px #48387033, 0 0 8px #2818501a; }
+      30%  { color: #7a7890; text-shadow: 0 0 4px #58487033, 0 0 10px #38287822; }
+      55%  { color: #9880b0; text-shadow: 0 0 6px #78589855, 0 0 14px #583880 33, 0 0 26px #38185844; }
+      75%  { color: #727082; text-shadow: 0 0 3px #52427233, 0 0 8px #3222551a; }
+      100% { color: #686678; text-shadow: 0 0 3px #48387033, 0 0 8px #2818501a; }
     }
 
     .stats-row {
@@ -334,18 +339,19 @@
 
     /* ── README terminal ── */
     #readme-terminal {
-      position: fixed; top: 8vh; right: 3vw;
+      position: absolute; top: 8vh; right: 3vw;
       width: 44vw; max-width: 680px; height: 80vh;
       background: #0d1117; border: 1px solid var(--border);
       border-radius: 12px; display: flex; flex-direction: column;
       font-family: 'Courier New', Courier, monospace;
       font-size: 0.82rem; color: var(--text);
-      overflow: hidden; z-index: 200;
+      overflow: hidden; z-index: 2147483647;
       opacity: 0; transform: translateY(18px);
       transition: opacity 0.5s ease, transform 0.5s ease;
       box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      will-change: transform; isolation: isolate;
     }
-    #readme-terminal.visible { opacity: 1; transform: translateY(0); }
+    #readme-terminal.visible { opacity: 1; transform: translateZ(0); }
     .term-titlebar {
       background: var(--surface); border-bottom: 1px solid var(--border);
       padding: 0.55rem 1rem; display: flex; align-items: center; gap: 0.45rem;
@@ -365,6 +371,42 @@
     @media (max-width: 900px) {
       #readme-terminal { width: 90vw; right: 5vw; top: auto; bottom: 2vh; height: 50vh; }
     }
+
+    /* ── Quote divider ── */
+    .quote-divider {
+      display: flex; align-items: center; justify-content: center;
+      padding: 3.5rem 2rem;
+      background: linear-gradient(180deg, #0d1117 0%, #0f111a 50%, #0d1117 100%);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .quote-divider::before, .quote-divider::after {
+      content: ''; position: absolute; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--purple) 30%, var(--accent) 50%, var(--purple) 70%, transparent 100%);
+      opacity: 0.25;
+    }
+    .quote-divider::before { top: 0; }
+    .quote-divider::after  { bottom: 0; }
+    .quote-inner {
+      max-width: 680px; text-align: center;
+    }
+    .quote-mark {
+      font-size: 4rem; line-height: 0.5; color: var(--purple);
+      opacity: 0.35; font-family: Georgia, serif; display: block;
+      margin-bottom: 0.75rem; user-select: none;
+    }
+    .quote-text {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-family: 'Edu NSW ACT Cursive', cursive;
+      font-style: normal; color: var(--text);
+      line-height: 1.75; letter-spacing: 0.01em;
+      white-space: pre-line;
+    }
+    .quote-author {
+      display: block; margin-top: 1.1rem;
+      font-size: 0.8rem; color: var(--muted);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -377,30 +419,20 @@
 
   <div class="hero-content">
     <h1 class="hero-name" id="hero-name-el"></h1>
-    <p class="hero-sub">The home page of all things raz!</p>
-
-    <!-- Stats filled by Python (Brython) -->
-    <div class="stats-row">
-      <div class="stat-item">
-        <span class="stat-value" id="stat-repos">—</span>
-        <span class="stat-label">repos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="stat-langs">—</span>
-        <span class="stat-label">languages</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="stat-stars">—</span>
-        <span class="stat-label">stars</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="stat-top-lang">—</span>
-        <span class="stat-label">top lang</span>
-      </div>
-    </div>
   </div>
 
 </header>
+
+
+<!-- ══════════════════════════════════════════════════════
+     QUOTE DIVIDER
+     ══════════════════════════════════════════════════════ -->
+<div class="quote-divider" id="quote-divider">
+  <div class="quote-inner">
+    <p class="quote-text" id="quote-text"></p>
+    <span class="quote-author" id="quote-author"></span>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════════════════════════
@@ -456,11 +488,11 @@
 
 
 <!-- ══════════════════════════════════════════════════════
-     BRAINFUCK EASTER EGG MODAL
+     BRAINF*CK EASTER EGG MODAL
      ══════════════════════════════════════════════════════ -->
 <div id="bf-modal">
   <div id="bf-box">
-    <h2>🧠 Brainfuck Easter Egg</h2>
+    <h2>brainf*ck Easter Egg</h2>
     <pre id="bf-code-display">+++++++++[>++++++++&lt;-]>.
 ++++++++++++++++++++++++
 +++++++++.
@@ -469,6 +501,18 @@
     <div id="bf-output-modal"></div>
     <button id="bf-close">Close</button>
   </div>
+</div>
+
+
+<!-- README terminal (fixed to viewport, shown by JS after hero animation) -->
+<div id="readme-terminal">
+  <div class="term-titlebar">
+    <span class="term-dot" style="background:#ff5f57"></span>
+    <span class="term-dot" style="background:#febc2e"></span>
+    <span class="term-dot" style="background:#28c840"></span>
+    <span class="term-title">razzyshmazzy / README.md</span>
+  </div>
+  <div class="term-body" id="readme-body"><span class="term-cursor"></span></div>
 </div>
 
 
@@ -563,7 +607,7 @@ searchInput?.addEventListener 'input', (e) ->
   clearTimeout searchTimer
   searchTimer = setTimeout (-> window.onSearch? e.target.value), 180
 
-# Ctrl+B — Brainfuck easter egg
+# Ctrl+B — brainf*ck easter egg
 document.addEventListener 'keydown', (e) ->
   if e.ctrlKey and e.key is 'b'
     e.preventDefault()
@@ -1055,7 +1099,7 @@ function initGLSL() {
 
 
 /* ───────────────────────────────────────────────
-   Brainfuck easter egg
+   brainf*ck easter egg
 ─────────────────────────────────────────────── */
 function runBF(src) {
   const tape = new Uint8Array(30000);
@@ -1081,7 +1125,7 @@ function runBF(src) {
   return out;
 }
 
-// "Hi!" in Brainfuck
+// "Hi!" in brainf*ck
 const BF_CODE =
   '+++++++++[>++++++++<-]>.' +           // H = 72
   '+++++++++++++++++++++++++++++++++.' +  // i = 72+33 = 105
@@ -1128,7 +1172,7 @@ function renderFilterButtons(repos) {
 ─────────────────────────────────────────────── */
 const PORTFOLIO_LANGS = [
   'HTML','CSS','JavaScript','WebAssembly','Python','Lua',
-  'SQL','Markdown','GLSL','SVG','JSON','CoffeeScript','Brainfuck'
+  'SQL','Markdown','GLSL','SVG','JSON','CoffeeScript','brainf*ck'
 ];
 document.getElementById('footer-pills').innerHTML =
   PORTFOLIO_LANGS.map(l => `<span class="footer-pill">${l}</span>`).join('');
@@ -1173,21 +1217,10 @@ function heroTypewriter(el, texts, opts) {
    README terminal typewriter
 ─────────────────────────────────────────────── */
 function showReadmeTerminal(text) {
-  const el = document.createElement('div');
-  el.id = 'readme-terminal';
-  el.innerHTML =
-    `<div class="term-titlebar">
-       <span class="term-dot" style="background:#ff5f57"></span>
-       <span class="term-dot" style="background:#febc2e"></span>
-       <span class="term-dot" style="background:#28c840"></span>
-       <span class="term-title">razzyshmazzy / README.md</span>
-     </div>
-     <div class="term-body" id="readme-body"><span class="term-cursor"></span></div>`;
-  document.body.appendChild(el);
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
-
+  const el     = document.getElementById('readme-terminal');
   const body   = document.getElementById('readme-body');
   const cursor = body.querySelector('.term-cursor');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
   let i = 0;
   function type() {
     if (i < text.length) {
@@ -1206,48 +1239,60 @@ window.addEventListener('load', async () => {
   // Start GLSL immediately
   initGLSL();
 
-  // Hero name typewriter — types "razzyshmazzy", then un-types "zyshmazzy", then slides left
+  // Random quote from quotes.txt
+  (async () => {
+    try {
+      const raw = await (await fetch('./quotes.txt')).text();
+      const quotes = [...raw.matchAll(/\{([\s\S]*?)\}/g)].map(m => m[1].trim());
+      if (quotes.length) {
+        const pick = quotes[Math.floor(Math.random() * quotes.length)];
+        // Split on last line starting with "-" for author attribution
+        const authorMatch = pick.match(/^([\s\S]+?)\n(-[\s\S]+)$/);
+        if (authorMatch) {
+          document.getElementById('quote-text').textContent   = authorMatch[1].trim();
+          document.getElementById('quote-author').textContent = authorMatch[2].trim();
+        } else {
+          document.getElementById('quote-text').textContent = pick;
+        }
+      }
+    } catch (_) {}
+  })();
+
+  // Hero name — render immediately, then delete "shmazzy" and slide left
   const nameEl = document.getElementById('hero-name-el');
   if (nameEl) {
-    heroTypewriter(nameEl, ['razzyshmazzy'], {
-      speed: 85,
-      deleteSpeed: 45,
-      delay: 999999, // prevent auto-loop; we take over in onFirstComplete
-      onFirstComplete(ctrl) {
-        ctrl.stopped = true;
-        const heroContent = document.querySelector('.hero-content');
-        // Pause 0.4s, then delete "zyshmazzy" (9 chars) one at a time
-        setTimeout(() => {
-          let toDelete = 'zyshmazzy'.length;
-          let current  = 'razzyshmazzy';
-          function deleteStep() {
-            if (toDelete > 0) {
-              current = current.slice(0, -1);
-              nameEl.textContent = current;
-              toDelete--;
-              setTimeout(deleteStep, 45);
-            } else {
-              // "raz" remains — slide hero-content left
-              if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
-              // Fetch README and open terminal
-              setTimeout(async () => {
-                let text = '# razzyshmazzy\n\nCould not load README.';
-                try {
-                  for (const branch of ['main', 'master']) {
-                    const res = await fetch(
-                      `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
-                    );
-                    if (res.ok) { text = await res.text(); break; }
-                  }
-                } catch (_) {}
-                showReadmeTerminal(text);
-              }, 750);
-            }
-          }
-          deleteStep();
-        }, 400);
+    nameEl.textContent = 'razzyshmazzy';
+    const heroContent = document.querySelector('.hero-content');
+    // Pause 1.4s, then delete "shmazzy" one char at a time
+    setTimeout(() => {
+      let toDelete = 'shmazzy'.length;
+      let current  = 'razzyshmazzy';
+      function deleteStep() {
+        if (toDelete > 0) {
+          current = current.slice(0, -1);
+          nameEl.textContent = current;
+          toDelete--;
+          setTimeout(deleteStep, 85);
+        } else {
+          // "razzy" remains — slide hero-content left
+          if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
+          // Fetch README and open terminal
+          setTimeout(async () => {
+            let text = '# razzyshmazzy\n\nCould not load README.';
+            try {
+              for (const branch of ['main', 'master']) {
+                const res = await fetch(
+                  `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
+                );
+                if (res.ok) { text = await res.text(); break; }
+              }
+            } catch (_) {}
+            showReadmeTerminal(text);
+          }, 750);
+        }
       }
-    });
+      deleteStep();
+    }, 1400);
   }
 
   // Fetch repo data

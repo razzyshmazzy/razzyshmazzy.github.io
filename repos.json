@@ -25,7 +25,7 @@
             "GLSL",
             "Markdown",
             "CoffeeScript",
-            "Brainfuck",
+            "brainf*ck",
             "SVG",
             "JSON"
           ],
@@ -41,7 +41,7 @@
             "highlight.js"
           ]
         },
-        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and Brainfuck hides an easter egg.",
+        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and brainf*ck hides an easter egg.",
         "entryPoints": [
           "index.html"
         ],
