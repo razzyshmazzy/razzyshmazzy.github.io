@@ -1206,43 +1206,46 @@ window.addEventListener('load', async () => {
   // Start GLSL immediately
   initGLSL();
 
-  // Hero name typewriter — cycles through strings, triggers split on first complete
+  // Hero name typewriter — types "razzyshmazzy", then un-types "zyshmazzy", then slides left
   const nameEl = document.getElementById('hero-name-el');
   if (nameEl) {
-    heroTypewriter(nameEl, ['razzyshmazzy', 'a developer.', 'building things.'], {
+    heroTypewriter(nameEl, ['razzyshmazzy'], {
       speed: 85,
       deleteSpeed: 45,
-      delay: 1600,
+      delay: 999999, // prevent auto-loop; we take over in onFirstComplete
       onFirstComplete(ctrl) {
+        ctrl.stopped = true;
+        const heroContent = document.querySelector('.hero-content');
+        // Pause 0.4s, then delete "zyshmazzy" (9 chars) one at a time
         setTimeout(() => {
-          ctrl.stopped = true;
-          const heroContent = document.querySelector('.hero-content');
-          // Split into raz + zyshmazzy spans
-          nameEl.innerHTML =
-            `<span id="hero-raz">raz</span><span id="hero-tail">zyshmazzy</span>`;
-          const tail = document.getElementById('hero-tail');
-          // Slide "zyshmazzy" left out
-          tail.style.transform = 'translateX(-2em)';
-          tail.style.opacity   = '0';
-          setTimeout(() => {
-            tail.style.visibility = 'hidden';
-            // Move "raz" to the left
-            if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
-            // Fetch README and open terminal
-            setTimeout(async () => {
-              let text = '# razzyshmazzy\n\nCould not load README.';
-              try {
-                for (const branch of ['main', 'master']) {
-                  const res = await fetch(
-                    `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
-                  );
-                  if (res.ok) { text = await res.text(); break; }
-                }
-              } catch (_) {}
-              showReadmeTerminal(text);
-            }, 750);
-          }, 560);
-        }, 1200);
+          let toDelete = 'zyshmazzy'.length;
+          let current  = 'razzyshmazzy';
+          function deleteStep() {
+            if (toDelete > 0) {
+              current = current.slice(0, -1);
+              nameEl.textContent = current;
+              toDelete--;
+              setTimeout(deleteStep, 45);
+            } else {
+              // "raz" remains — slide hero-content left
+              if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
+              // Fetch README and open terminal
+              setTimeout(async () => {
+                let text = '# razzyshmazzy\n\nCould not load README.';
+                try {
+                  for (const branch of ['main', 'master']) {
+                    const res = await fetch(
+                      `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
+                    );
+                    if (res.ok) { text = await res.text(); break; }
+                  }
+                } catch (_) {}
+                showReadmeTerminal(text);
+              }, 750);
+            }
+          }
+          deleteStep();
+        }, 400);
       }
     });
   }
