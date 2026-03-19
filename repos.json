@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-18T06:56:09.715Z",
+  "lastUpdated": "2026-03-19T06:51:56.580Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
@@ -9,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-03-17T23:33:50Z",
+      "updatedAt": "2026-03-18T21:50:02Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -61,11 +61,11 @@
     {
       "name": "doccer",
       "description": "Compiles all google docs and provides a downloadable pdf",
-      "language": "JavaScript",
+      "language": "HTML",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/doccer",
       "homepage": null,
-      "updatedAt": "2026-03-17T01:36:49Z",
+      "updatedAt": "2026-03-18T21:14:28Z",
       "topics": [],
       "summary": {
         "purpose": "Web app that authenticates with Google, fetches all documents from a Google Drive account, and bundles them into a single downloadable PDF.",
