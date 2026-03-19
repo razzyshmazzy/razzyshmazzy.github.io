@@ -333,45 +333,6 @@
       #search-input { width: 140px; }
     }
 
-    /* ── Hero typewriter / split animation ── */
-    .hero-content { transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1); }
-    #hero-tail    { display: inline; transition: transform 0.5s ease-in, opacity 0.5s ease-in; }
-
-    /* ── README terminal ── */
-    #readme-terminal {
-      position: absolute; top: 8vh; right: 3vw;
-      width: 44vw; max-width: 680px; height: 80vh;
-      background: #0d1117; border: 1px solid var(--border);
-      border-radius: 12px; display: flex; flex-direction: column;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.82rem; color: var(--text);
-      overflow: hidden; z-index: 2147483647;
-      opacity: 0; transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-      will-change: transform; isolation: isolate;
-    }
-    #readme-terminal.visible { opacity: 1; transform: translateZ(0); }
-    .term-titlebar {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.55rem 1rem; display: flex; align-items: center; gap: 0.45rem;
-      flex-shrink: 0;
-    }
-    .term-dot   { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-    .term-title { margin-left: 0.6rem; font-size: 0.73rem; color: var(--muted);
-                  font-family: 'Courier New', Courier, monospace; }
-    .term-body  { padding: 1.1rem 1.25rem; overflow-y: auto; flex: 1;
-                  white-space: pre-wrap; word-break: break-word; line-height: 1.75; }
-    .term-cursor {
-      display: inline-block; width: 0.55em; height: 1em;
-      background: var(--accent); vertical-align: text-bottom;
-      animation: blink 1s step-end infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @media (max-width: 900px) {
-      #readme-terminal { width: 90vw; right: 5vw; top: auto; bottom: 2vh; height: 50vh; }
-    }
-
     /* ── Quote divider ── */
     .quote-divider {
       display: flex; align-items: center; justify-content: center;
@@ -501,18 +462,6 @@
     <div id="bf-output-modal"></div>
     <button id="bf-close">Close</button>
   </div>
-</div>
-
-
-<!-- README terminal (fixed to viewport, shown by JS after hero animation) -->
-<div id="readme-terminal">
-  <div class="term-titlebar">
-    <span class="term-dot" style="background:#ff5f57"></span>
-    <span class="term-dot" style="background:#febc2e"></span>
-    <span class="term-dot" style="background:#28c840"></span>
-    <span class="term-title">razzyshmazzy / README.md</span>
-  </div>
-  <div class="term-body" id="readme-body"><span class="term-cursor"></span></div>
 </div>
 
 
@@ -1178,59 +1127,6 @@ document.getElementById('footer-pills').innerHTML =
   PORTFOLIO_LANGS.map(l => `<span class="footer-pill">${l}</span>`).join('');
 
 
-/* ───────────────────────────────────────────────
-   Hero name typewriter
-   (ports the Typewriter React component to vanilla JS)
-─────────────────────────────────────────────── */
-function heroTypewriter(el, texts, opts) {
-  const { speed = 100, deleteSpeed = 50, delay = 1500, onFirstComplete } = opts || {};
-  let textIdx = 0, charIdx = 0, deleting = false, firstDone = false;
-  const ctrl = { stopped: false };
-
-  function tick() {
-    if (ctrl.stopped) return;
-    const text = texts[textIdx] || '';
-    if (!deleting) {
-      if (charIdx < text.length) {
-        el.textContent = text.slice(0, ++charIdx);
-        setTimeout(tick, speed);
-      } else {
-        if (!firstDone) { firstDone = true; onFirstComplete?.(ctrl); }
-        setTimeout(() => { if (!ctrl.stopped) { deleting = true; tick(); } }, delay);
-      }
-    } else {
-      if (charIdx > 0) {
-        el.textContent = text.slice(0, --charIdx);
-        setTimeout(tick, deleteSpeed);
-      } else {
-        deleting = false;
-        textIdx = (textIdx + 1) % texts.length;
-        setTimeout(tick, speed);
-      }
-    }
-  }
-  tick();
-  return ctrl;
-}
-
-/* ───────────────────────────────────────────────
-   README terminal typewriter
-─────────────────────────────────────────────── */
-function showReadmeTerminal(text) {
-  const el     = document.getElementById('readme-terminal');
-  const body   = document.getElementById('readme-body');
-  const cursor = body.querySelector('.term-cursor');
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      cursor.insertAdjacentText('beforebegin', text[i++]);
-      body.scrollTop = body.scrollHeight;
-      setTimeout(type, 14);
-    }
-  }
-  setTimeout(type, 450);
-}
 
 /* ───────────────────────────────────────────────
    Bootstrap — fetch repos.json, wire everything up
@@ -1258,42 +1154,9 @@ window.addEventListener('load', async () => {
     } catch (_) {}
   })();
 
-  // Hero name — render immediately, then delete "shmazzy" and slide left
+  // Hero name — static, centered
   const nameEl = document.getElementById('hero-name-el');
-  if (nameEl) {
-    nameEl.textContent = 'razzyshmazzy';
-    const heroContent = document.querySelector('.hero-content');
-    // Pause 1.4s, then delete "shmazzy" one char at a time
-    setTimeout(() => {
-      let toDelete = 'shmazzy'.length;
-      let current  = 'razzyshmazzy';
-      function deleteStep() {
-        if (toDelete > 0) {
-          current = current.slice(0, -1);
-          nameEl.textContent = current;
-          toDelete--;
-          setTimeout(deleteStep, 85);
-        } else {
-          // "razzy" remains — slide hero-content left
-          if (heroContent) heroContent.style.transform = 'translateX(-28vw)';
-          // Fetch README and open terminal
-          setTimeout(async () => {
-            let text = '# razzyshmazzy\n\nCould not load README.';
-            try {
-              for (const branch of ['main', 'master']) {
-                const res = await fetch(
-                  `https://raw.githubusercontent.com/razzyshmazzy/razzyshmazzy/${branch}/README.md`
-                );
-                if (res.ok) { text = await res.text(); break; }
-              }
-            } catch (_) {}
-            showReadmeTerminal(text);
-          }, 750);
-        }
-      }
-      deleteStep();
-    }, 1400);
-  }
+  if (nameEl) nameEl.textContent = 'razzyshmazzy';
 
   // Fetch repo data
   let data;
