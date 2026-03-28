@@ -19,6 +19,8 @@ change slider so in theme
 
 change font of quote
 
+make it so that the neco arc 
+
 delete background color block and horizontal lines
 
 ----

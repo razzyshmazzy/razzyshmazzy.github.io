@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
 import type { Repo } from '@/types/repo';
 import styles from './RepoCard.module.css';
 
@@ -87,72 +86,19 @@ function RepoCard({ repo }: { repo: Repo }) {
 }
 
 export default function RepoGrid({ repos }: Props) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number>(0);
-  const speedRef = useRef(1);
-  const targetRef = useRef(1);
-
-  const lerp = useCallback(() => {
-    const diff = targetRef.current - speedRef.current;
-    if (Math.abs(diff) > 0.001) {
-      speedRef.current += diff * 0.06;
-      const el = trackRef.current;
-      if (el) {
-        el.getAnimations().forEach((a) => {
-          a.playbackRate = Math.max(0, speedRef.current);
-        });
-      }
-      rafRef.current = requestAnimationFrame(lerp);
-    } else {
-      speedRef.current = targetRef.current;
-      trackRef.current?.getAnimations().forEach((a) => {
-        a.playbackRate = speedRef.current;
-      });
-    }
-  }, []);
-
-  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
-
-  const handleEnter = useCallback(() => {
-    targetRef.current = 0;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(lerp);
-  }, [lerp]);
-
-  const handleLeave = useCallback(() => {
-    targetRef.current = 1;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(lerp);
-  }, [lerp]);
-
   if (!repos.length) {
     return (
-      <div className="repos-slider">
+      <div className="repos-grid">
         <div className="grid-empty">No repos match your search.</div>
       </div>
     );
   }
 
-  const duration = repos.length * 8;
-
   return (
-    <div
-      className="repos-slider"
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      <div
-        className="repos-slider-track"
-        ref={trackRef}
-        style={{ animationDuration: `${duration}s` }}
-      >
-        {repos.map((repo) => (
-          <RepoCard key={repo.name} repo={repo} />
-        ))}
-        {repos.map((repo) => (
-          <RepoCard key={`dup-${repo.name}`} repo={repo} />
-        ))}
-      </div>
+    <div className="repos-grid">
+      {repos.map((repo) => (
+        <RepoCard key={repo.name} repo={repo} />
+      ))}
     </div>
   );
 }

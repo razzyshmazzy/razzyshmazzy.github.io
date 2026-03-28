@@ -870,10 +870,7 @@ __turbopack_context__.s([
     ()=>RepoGrid
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/src/components/RepoCard.module.css [app-client] (css module)");
-;
-var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
@@ -907,7 +904,7 @@ function RepoCard({ repo }) {
                             children: repo.name
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 30,
+                            lineNumber: 29,
                             columnNumber: 9
                         }, this),
                         repo.language && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -915,13 +912,13 @@ function RepoCard({ repo }) {
                             children: repo.language
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 39,
+                            lineNumber: 38,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 29,
+                    lineNumber: 28,
                     columnNumber: 7
                 }, this),
                 repo.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -929,7 +926,7 @@ function RepoCard({ repo }) {
                     children: repo.description
                 }, void 0, false, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 45,
+                    lineNumber: 44,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -941,7 +938,7 @@ function RepoCard({ repo }) {
                                 children: s.purpose
                             }, void 0, false, {
                                 fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 50,
+                                lineNumber: 49,
                                 columnNumber: 13
                             }, this),
                             techItems.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -951,12 +948,12 @@ function RepoCard({ repo }) {
                                         children: t
                                     }, t, false, {
                                         fileName: "[project]/src/components/RepoGrid.tsx",
-                                        lineNumber: 54,
+                                        lineNumber: 53,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 52,
+                                lineNumber: 51,
                                 columnNumber: 15
                             }, this),
                             s.architecture && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -964,7 +961,7 @@ function RepoCard({ repo }) {
                                 children: s.architecture.length > 160 ? s.architecture.slice(0, 160) + '…' : s.architecture
                             }, void 0, false, {
                                 fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 59,
+                                lineNumber: 58,
                                 columnNumber: 15
                             }, this)
                         ]
@@ -976,12 +973,12 @@ function RepoCard({ repo }) {
                         children: "Analysis pending — runs nightly via GitHub Actions."
                     }, void 0, false, {
                         fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 67,
+                        lineNumber: 66,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 47,
+                    lineNumber: 46,
                     columnNumber: 7
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -994,14 +991,14 @@ function RepoCard({ repo }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 73,
+                            lineNumber: 72,
                             columnNumber: 23
                         }, this) : null,
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             children: timeAgo(repo.updatedAt)
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 74,
+                            lineNumber: 73,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1012,137 +1009,61 @@ function RepoCard({ repo }) {
                             children: "GitHub →"
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 75,
+                            lineNumber: 74,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 72,
+                    lineNumber: 71,
                     columnNumber: 7
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 28,
+            lineNumber: 27,
             columnNumber: 5
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 27,
+        lineNumber: 26,
         columnNumber: 5
     }, this);
 }
 _c = RepoCard;
 function RepoGrid({ repos }) {
-    _s();
-    const trackRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const rafRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(0);
-    const speedRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(1);
-    const targetRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(1);
-    const lerp = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "RepoGrid.useCallback[lerp]": ()=>{
-            const diff = targetRef.current - speedRef.current;
-            if (Math.abs(diff) > 0.001) {
-                speedRef.current += diff * 0.06;
-                const el = trackRef.current;
-                if (el) {
-                    el.getAnimations().forEach({
-                        "RepoGrid.useCallback[lerp]": (a)=>{
-                            a.playbackRate = Math.max(0, speedRef.current);
-                        }
-                    }["RepoGrid.useCallback[lerp]"]);
-                }
-                rafRef.current = requestAnimationFrame(lerp);
-            } else {
-                speedRef.current = targetRef.current;
-                trackRef.current?.getAnimations().forEach({
-                    "RepoGrid.useCallback[lerp]": (a)=>{
-                        a.playbackRate = speedRef.current;
-                    }
-                }["RepoGrid.useCallback[lerp]"]);
-            }
-        }
-    }["RepoGrid.useCallback[lerp]"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "RepoGrid.useEffect": ()=>({
-                "RepoGrid.useEffect": ()=>cancelAnimationFrame(rafRef.current)
-            })["RepoGrid.useEffect"]
-    }["RepoGrid.useEffect"], []);
-    const handleEnter = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "RepoGrid.useCallback[handleEnter]": ()=>{
-            targetRef.current = 0;
-            cancelAnimationFrame(rafRef.current);
-            rafRef.current = requestAnimationFrame(lerp);
-        }
-    }["RepoGrid.useCallback[handleEnter]"], [
-        lerp
-    ]);
-    const handleLeave = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "RepoGrid.useCallback[handleLeave]": ()=>{
-            targetRef.current = 1;
-            cancelAnimationFrame(rafRef.current);
-            rafRef.current = requestAnimationFrame(lerp);
-        }
-    }["RepoGrid.useCallback[handleLeave]"], [
-        lerp
-    ]);
     if (!repos.length) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "repos-slider",
+            className: "repos-grid",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid-empty",
                 children: "No repos match your search."
             }, void 0, false, {
                 fileName: "[project]/src/components/RepoGrid.tsx",
-                lineNumber: 131,
+                lineNumber: 92,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 130,
+            lineNumber: 91,
             columnNumber: 7
         }, this);
     }
-    const duration = repos.length * 8;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "repos-slider",
-        onMouseEnter: handleEnter,
-        onMouseLeave: handleLeave,
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "repos-slider-track",
-            ref: trackRef,
-            style: {
-                animationDuration: `${duration}s`
-            },
-            children: [
-                repos.map((repo)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(RepoCard, {
-                        repo: repo
-                    }, repo.name, false, {
-                        fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 150,
-                        columnNumber: 11
-                    }, this)),
-                repos.map((repo)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(RepoCard, {
-                        repo: repo
-                    }, `dup-${repo.name}`, false, {
-                        fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 153,
-                        columnNumber: 11
-                    }, this))
-            ]
-        }, void 0, true, {
-            fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 144,
-            columnNumber: 7
-        }, this)
+        className: "repos-grid",
+        children: repos.map((repo)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(RepoCard, {
+                repo: repo
+            }, repo.name, false, {
+                fileName: "[project]/src/components/RepoGrid.tsx",
+                lineNumber: 100,
+                columnNumber: 9
+            }, this))
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 139,
+        lineNumber: 98,
         columnNumber: 5
     }, this);
 }
-_s(RepoGrid, "f8XOkBirR2OjUfLAyRGmDXQZRLw=");
 _c1 = RepoGrid;
 var _c, _c1;
 __turbopack_context__.k.register(_c, "RepoCard");
@@ -1179,11 +1100,31 @@ function HomePage() {
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "HomePage.useEffect": ()=>{
-            fetch('/repos.json').then({
-                "HomePage.useEffect": (r)=>r.json()
-            }["HomePage.useEffect"]).then({
-                "HomePage.useEffect": (data)=>{
-                    const sorted = (data.repos ?? []).sort({
+            Promise.all([
+                fetch('/repos.json').then({
+                    "HomePage.useEffect": (r)=>r.json()
+                }["HomePage.useEffect"]),
+                fetch('/repoHeroes').then({
+                    "HomePage.useEffect": (r)=>r.text()
+                }["HomePage.useEffect"]).catch({
+                    "HomePage.useEffect": ()=>null
+                }["HomePage.useEffect"])
+            ]).then({
+                "HomePage.useEffect": ([data, heroesRaw])=>{
+                    let repoList = data.repos ?? [];
+                    if (heroesRaw) {
+                        const heroNames = [
+                            ...heroesRaw.matchAll(/\{(\S+)/g)
+                        ].map({
+                            "HomePage.useEffect.heroNames": (m)=>m[1]
+                        }["HomePage.useEffect.heroNames"]);
+                        if (heroNames.length) {
+                            repoList = repoList.filter({
+                                "HomePage.useEffect": (r)=>heroNames.includes(r.name)
+                            }["HomePage.useEffect"]);
+                        }
+                    }
+                    const sorted = repoList.sort({
                         "HomePage.useEffect.sorted": (a, b)=>new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
                     }["HomePage.useEffect.sorted"]);
                     setRepos(sorted);
@@ -1201,17 +1142,17 @@ function HomePage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Hero$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 33,
+                lineNumber: 45,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$NecoWalker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 34,
+                lineNumber: 46,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$QuoteDivider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 35,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1221,25 +1162,25 @@ function HomePage() {
                     children: "Loading repositories…"
                 }, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 39,
+                    lineNumber: 51,
                     columnNumber: 11
                 }, this) : error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid-empty",
                     children: "Could not load repos.json — make sure it exists in the public directory."
                 }, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 41,
+                    lineNumber: 53,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                     repos: repos
                 }, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 45,
+                    lineNumber: 57,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 37,
+                lineNumber: 49,
                 columnNumber: 7
             }, this)
         ]

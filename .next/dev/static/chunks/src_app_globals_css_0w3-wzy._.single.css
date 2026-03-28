@@ -1315,7 +1315,7 @@ body {
   background: linear-gradient(90deg, #0000, #ffffff0f 15%, #ffffff1f 50%, #ffffff0f 85%, #0000);
   height: 1px;
   position: absolute;
-  bottom: 11%;
+  bottom: 0;
   left: 5%;
   right: 5%;
 }
@@ -1375,7 +1375,7 @@ body {
   width: 45px;
   height: 165px;
   position: absolute;
-  bottom: 14%;
+  bottom: 3%;
   right: 8%;
   transform: rotate(6deg);
 }
@@ -1529,7 +1529,7 @@ body {
   width: auto;
   height: 96px;
   position: absolute;
-  top: calc(89svh - 96px);
+  top: calc(100svh - 96px);
   left: 0;
 }
 
@@ -1540,7 +1540,7 @@ body {
   background: #05050599;
   justify-content: center;
   align-items: center;
-  padding: 3.5rem 2rem;
+  padding: 1.5rem 2rem;
   display: flex;
   position: relative;
   overflow: hidden;
@@ -1584,7 +1584,7 @@ body {
 }
 
 .quote-author {
-  color: var(--muted);
+  color: var(--text);
   letter-spacing: .08em;
   text-transform: uppercase;
   margin-top: 1.1rem;
@@ -1717,28 +1717,26 @@ body {
   background: var(--surface);
 }
 
-.repos-slider {
+.repos-grid {
   z-index: 10;
-  position: relative;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, #0000, #000 4% 96%, #0000);
-  mask-image: linear-gradient(90deg, #0000, #000 4% 96%, #0000);
-}
-
-.repos-slider-track {
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
-  width: max-content;
-  animation: linear infinite slider-scroll;
-  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  position: relative;
 }
 
-@keyframes slider-scroll {
-  from {
-    transform: translateX(0);
+@media (max-width: 900px) {
+  .repos-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  to {
-    transform: translateX(-50%);
+@media (max-width: 560px) {
+  .repos-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1747,9 +1745,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   flex-direction: column;
-  flex-shrink: 0;
   gap: .75rem;
-  width: 340px;
   padding: 1.25rem;
   transition: border-color .2s;
   display: flex;
@@ -1868,6 +1864,33 @@ body {
   grid-column: 1 / -1;
   padding: 4rem 2rem;
   font-size: .95rem;
+}
+
+.about-me {
+  text-align: center;
+  max-width: 680px;
+  margin: 4rem auto;
+  padding: 2rem;
+  position: relative;
+}
+
+.about-me-heading {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-family: var(--font-rationale, "Rationale"), sans-serif;
+  letter-spacing: .05em;
+  color: #fff;
+  text-shadow: 0 0 40px #fff3;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.about-me-text {
+  font-size: clamp(.95rem, 1.5vw, 1.1rem);
+  font-family: var(--font-orbitron, "Orbitron"), sans-serif;
+  color: var(--text);
+  white-space: pre-line;
+  letter-spacing: .01em;
+  line-height: 1.9;
 }
 
 .chart-section {
