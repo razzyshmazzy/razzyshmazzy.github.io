@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "2026-03-27T07:01:00.267Z",
+  "lastUpdated": "2026-03-28T06:52:12.822Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
-      "language": "HTML",
+      "language": "JavaScript",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-03-26T07:01:35Z",
+      "updatedAt": "2026-03-28T05:30:20Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
