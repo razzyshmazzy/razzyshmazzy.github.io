@@ -1,0 +1,31 @@
+neco stare appears somewhere at the top
+one neco arc walks out on scroll
+the neco wow appears near the repos
+neco dance appears after having scrolled past it, then back up
+
+main theme = sky.
+-aincrad on the 
+-animated floating clouds
+-text should stand out
+    --if cursor hovers over one letter, it should float
+    --when moved off, letter should go back down and stabilize, and cause a ripple effect that makes the other letters go up and down, like a sine wave passing through them.
+
+also, change repo look:
+-image of project
+-only the best projects
+-description i've written
+
+change slider so in theme
+
+change font of quote
+
+delete background color block and horizontal lines
+
+----
+
+format:
+-"razzyshmazzy"
+-quote
+-icons
+-about me
+-skills

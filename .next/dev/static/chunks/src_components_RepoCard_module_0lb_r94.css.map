@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///Users/nicozametto/Documents/GitHub/razzyshmazzy.github.io/src/components/RepoCard.module.css"],"sourcesContent":[".perspective {\n  perspective: 500px;\n}\n\n.card {\n  background: #111;\n  border: 1px solid #222;\n  border-radius: 4px;\n  position: relative;\n  transform-style: preserve-3d;\n  will-change: transform;\n  transition: transform 0.4s, border-color 0.3s, box-shadow 0.3s;\n  display: flex;\n  flex-direction: column;\n  gap: 0.75rem;\n  padding: 1.25rem;\n  height: 100%;\n}\n\n.card:hover {\n  transform: translateZ(8px) rotateX(2deg) rotateY(2deg);\n  border-color: #444;\n  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.03);\n}\n\n.cardTitle {\n  color: #fff;\n  font: 700 1.1rem -apple-system, BlinkMacSystemFont, sans-serif;\n  transition: transform 0.4s;\n  transform-style: preserve-3d;\n  display: inline-block;\n}\n\n.card:hover .cardTitle {\n  transform: translateZ(30px);\n}\n"],"names":[],"mappings":"AAAA;;;;AAIA;;;;;;;;;;;;;;;AAeA;;;;;;AAMA;;;;;;;;AAQA"}}]
+}

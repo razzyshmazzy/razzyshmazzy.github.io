@@ -1,0 +1,141 @@
+/* [project]/src/components/MatrixBackground.module.css [app-client] (css) */
+.MatrixBackground-module__KL1Xhq__wrapper {
+  z-index: 0;
+  background-color: #0d1117;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix {
+  color: #0096ff66;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-auto-rows: 40px;
+  place-content: center;
+  width: 100%;
+  min-height: 100%;
+  font-family: Courier New, Courier, monospace;
+  font-size: 32px;
+  display: grid;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span {
+  text-align: center;
+  text-shadow: 0 0 5px #0096ff80;
+  -webkit-user-select: none;
+  user-select: none;
+  line-height: 1;
+  transition: color .5s, text-shadow .5s;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(11n) {
+  color: #64c8ffb3;
+  animation: 2.9s ease-in-out 1.1s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(19n+2) {
+  animation: 3.5s ease-in-out .2s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(29n+1) {
+  animation: 4.1s ease-in-out .7s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(37n+10) {
+  animation: 5.3s ease-in-out 1.5s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(41n+1) {
+  animation: 3.9s ease-in-out .4s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(17n+9) {
+  animation: 2.8s ease-in-out .9s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(23n+18) {
+  animation: 4.3s ease-in-out 1.3s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(31n+4) {
+  animation: 5.6s ease-in-out .1s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(43n+20) {
+  animation: 3.6s ease-in-out 1.8s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(13n+6) {
+  animation: 3.2s ease-in-out 1.2s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(53n+5) {
+  animation: 4.9s ease-in-out .5s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+.MatrixBackground-module__KL1Xhq__matrix > span:nth-child(47n+15) {
+  animation: 5.9s ease-in-out 1s infinite MatrixBackground-module__KL1Xhq__smooth-pulse;
+}
+
+@keyframes MatrixBackground-module__KL1Xhq__smooth-pulse {
+  0%, 100% {
+    color: #0096ff66;
+    text-shadow: 0 0 5px #0096ff80;
+  }
+
+  30% {
+    color: #64c8ff;
+    text-shadow: 0 0 10px #64c8ff, 0 0 15px #64c8ff;
+  }
+
+  50% {
+    color: #ff69b4;
+    text-shadow: 0 0 10px #ff69b4, 0 0 15px #ff69b4;
+  }
+
+  70% {
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #fff;
+  }
+}
+
+/* [project]/src/components/RepoCard.module.css [app-client] (css) */
+.RepoCard-module__OdBfVW__perspective {
+  perspective: 500px;
+}
+
+.RepoCard-module__OdBfVW__card {
+  transform-style: preserve-3d;
+  will-change: transform;
+  background: #161b22;
+  border: 2px solid #30363d;
+  border-radius: 4px;
+  flex-direction: column;
+  gap: .75rem;
+  height: 100%;
+  padding: 1.25rem;
+  transition: transform .5s;
+  display: flex;
+  position: relative;
+}
+
+.RepoCard-module__OdBfVW__card:hover {
+  border-color: #58a6ff;
+  transform: translateZ(10px)rotateX(10deg)rotateY(10deg);
+  box-shadow: 0 0 18px #58a6ff26;
+}
+
+.RepoCard-module__OdBfVW__cardTitle {
+  color: #fff;
+  text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  transform-style: preserve-3d;
+  font: 700 1.1rem monospace;
+  transition: transform .5s;
+  display: inline-block;
+}
+
+.RepoCard-module__OdBfVW__card:hover .RepoCard-module__OdBfVW__cardTitle {
+  transform: translateZ(50px);
+}
+
+/*# sourceMappingURL=src_components_00zh2kz._.css.map*/
