@@ -27,6 +27,9 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "razzyshmazzy's portfolio",
   description: "Personal portfolio of razzyshmazzy",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
