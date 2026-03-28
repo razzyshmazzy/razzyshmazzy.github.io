@@ -36,6 +36,9 @@ jobs:
       - name: Add .nojekyll
         run: touch out/.nojekyll
 
+      - name: Copy CNAME
+        run: cp CNAME out/CNAME
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
