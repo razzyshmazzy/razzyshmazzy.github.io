@@ -239,6 +239,37 @@ const NORMAL_Z = 3;
 const MIN_FALL_DURATION = 200;
 const G_PX_PER_MS2 = 0.002;
 const RESCAN_INTERVAL = 5;
+const WALK_MIN_MS = 5000;
+const WALK_MAX_MS = 12000;
+const STAND_PAUSE_MIN_MS = 1000;
+const STAND_PAUSE_MAX_MS = 2500;
+const EMOTE_DURATION_MS = 3000;
+const EMOTE_MIN_COUNT = 1;
+const EMOTE_MAX_COUNT = 3;
+const RUN_SPEED_MULT = 2.2;
+const STANDING_SRC = '/neco-stickers/neco-standing.webp';
+const RUN_SRC = '/neco-stickers/neco-run.webp';
+const EMOTE_SRCS = [
+    '/neco-stickers/neco-dance.webp',
+    '/neco-stickers/neco-dance-2.webp',
+    '/neco-stickers/neco-dance-3.webp',
+    '/neco-stickers/neco-hooray.webp',
+    '/neco-stickers/neco-laugh.webp',
+    '/neco-stickers/neco-scream.webp',
+    '/neco-stickers/neco-shrug.webp',
+    '/neco-stickers/neco-smart.webp',
+    '/neco-stickers/neco-sulk.webp',
+    '/neco-stickers/neco-whatever.webp',
+    '/neco-stickers/neco-wine.webp',
+    '/neco-stickers/neco-chill-2.webp',
+    '/neco-stickers/neco-cmon.webp'
+];
+function randRange(min, max) {
+    return min + Math.random() * (max - min);
+}
+function randInt(min, max) {
+    return Math.floor(randRange(min, max + 1));
+}
 function NecoWalker() {
     _s();
     const imgRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -260,6 +291,12 @@ function NecoWalker() {
             let rafId;
             let stareTimer = null;
             let lastCursorX = 0;
+            // idle sequence state
+            let walkStartTime = 0;
+            let walkStopAfter = randRange(WALK_MIN_MS, WALK_MAX_MS);
+            let moveMode = 'walk';
+            let emotesRemaining = 0;
+            let lastEmoteIndex = -1;
             // drag state
             let grabOffsetX = 0;
             let grabOffsetY = 0;
@@ -278,9 +315,23 @@ function NecoWalker() {
             let gifWidth = 0;
             let gifHeight = 0;
             let compositeFrames = [];
-            const walkSpeed = {
-                "NecoWalker.useEffect.walkSpeed": ()=>(window.innerWidth + HEIGHT * 2) / (48 * 60)
-            }["NecoWalker.useEffect.walkSpeed"];
+            const baseSpeed = {
+                "NecoWalker.useEffect.baseSpeed": ()=>(window.innerWidth + HEIGHT * 2) / (48 * 60)
+            }["NecoWalker.useEffect.baseSpeed"];
+            const moveSpeed = {
+                "NecoWalker.useEffect.moveSpeed": ()=>moveMode === 'run' ? baseSpeed() * RUN_SPEED_MULT : baseSpeed()
+            }["NecoWalker.useEffect.moveSpeed"];
+            // Preload sticker images for smooth transitions
+            [
+                STANDING_SRC,
+                RUN_SRC,
+                ...EMOTE_SRCS
+            ].forEach({
+                "NecoWalker.useEffect": (src)=>{
+                    const preload = new Image();
+                    preload.src = src;
+                }
+            }["NecoWalker.useEffect"]);
             // ── decode gif frames ──
             fetch('/neco-falling.gif').then({
                 "NecoWalker.useEffect": (r)=>r.arrayBuffer()
@@ -321,6 +372,51 @@ function NecoWalker() {
                     stareTimer = null;
                 }
                 isAnimating = false;
+            }
+            function startIdleSequence() {
+                phase = 'standing';
+                img.src = STANDING_SRC;
+                applyImgTransform();
+                emotesRemaining = randInt(EMOTE_MIN_COUNT, EMOTE_MAX_COUNT);
+                lastEmoteIndex = -1;
+                stareTimer = setTimeout(doNextEmote, randRange(STAND_PAUSE_MIN_MS, STAND_PAUSE_MAX_MS));
+            }
+            function doNextEmote() {
+                if (emotesRemaining <= 0) {
+                    resumeMoving();
+                    return;
+                }
+                let idx;
+                do {
+                    idx = randInt(0, EMOTE_SRCS.length - 1);
+                }while (idx === lastEmoteIndex && EMOTE_SRCS.length > 1)
+                lastEmoteIndex = idx;
+                phase = 'emoting';
+                img.src = EMOTE_SRCS[idx];
+                applyImgTransform();
+                emotesRemaining--;
+                stareTimer = setTimeout({
+                    "NecoWalker.useEffect.doNextEmote": ()=>{
+                        if (emotesRemaining > 0) {
+                            // Brief standing pause between emotes
+                            phase = 'standing';
+                            img.src = STANDING_SRC;
+                            applyImgTransform();
+                            stareTimer = setTimeout(doNextEmote, randRange(500, 1200));
+                        } else {
+                            resumeMoving();
+                        }
+                    }
+                }["NecoWalker.useEffect.doNextEmote"], EMOTE_DURATION_MS);
+            }
+            function resumeMoving() {
+                direction = Math.random() < 0.5 ? -1 : 1;
+                moveMode = Math.random() < 0.35 ? 'run' : 'walk';
+                img.src = moveMode === 'run' ? RUN_SRC : '/neco-walk.gif';
+                walkStartTime = performance.now();
+                walkStopAfter = randRange(WALK_MIN_MS, WALK_MAX_MS);
+                phase = 'walking';
+                applyImgTransform();
             }
             const VISUAL_TAGS = new Set([
                 'IMG',
@@ -504,10 +600,8 @@ function NecoWalker() {
                 applyImgTransform();
                 stareTimer = setTimeout({
                     "NecoWalker.useEffect.land": ()=>{
-                        direction = Math.random() < 0.5 ? -1 : 1;
-                        img.src = '/neco-walk.gif';
-                        phase = 'walking';
                         isAnimating = false;
+                        resumeMoving();
                     }
                 }["NecoWalker.useEffect.land"], STARE_MS);
             }
@@ -531,7 +625,7 @@ function NecoWalker() {
                         const surfRect = landedSurface.getBoundingClientRect();
                         const surfPageY = surfRect.top + window.scrollY;
                         fallY = surfPageY - basePageY - HEIGHT;
-                        x += walkSpeed() * direction;
+                        x += moveSpeed() * direction;
                         // Edge detection: char center beyond surface edge → fall
                         const charRect = img.getBoundingClientRect();
                         const charCenter = charRect.left + charRect.width / 2;
@@ -542,11 +636,21 @@ function NecoWalker() {
                         }
                     } else {
                         // No surface — walk across full viewport (pre-fall)
-                        x += walkSpeed() * direction;
+                        x += moveSpeed() * direction;
                         if (direction === 1 && x > window.innerWidth + HEIGHT) x = -HEIGHT;
                         if (direction === -1 && x < -HEIGHT) x = window.innerWidth + HEIGHT;
                         applyImgTransform();
                     }
+                    // Random idle stop — only when on-screen
+                    if (phase === 'walking' && x > 0 && x < window.innerWidth && performance.now() - walkStartTime > walkStopAfter) {
+                        startIdleSequence();
+                    }
+                }
+                // ── standing / emoting — track surface Y ──
+                if ((phase === 'standing' || phase === 'emoting') && landedSurface) {
+                    const surfPageY = landedSurface.getBoundingClientRect().top + window.scrollY;
+                    fallY = surfPageY - basePageY - HEIGHT;
+                    applyImgTransform();
                 }
                 // ── falling phase ──
                 if (phase === 'falling' && compositeFrames.length > 0) {
@@ -673,9 +777,13 @@ function NecoWalker() {
                 passive: false
             });
             // ── scroll handling ──
-            if (window.scrollY >= 200) phase = 'walking';
+            if (window.scrollY >= 200) {
+                walkStartTime = performance.now();
+                phase = 'walking';
+            }
             function onScroll() {
                 if (phase === 'idle' && window.scrollY >= 200) {
+                    walkStartTime = performance.now();
                     phase = 'walking';
                     return;
                 }
@@ -723,7 +831,7 @@ function NecoWalker() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/NecoWalker.tsx",
-                lineNumber: 529,
+                lineNumber: 645,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("canvas", {
@@ -736,7 +844,7 @@ function NecoWalker() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/NecoWalker.tsx",
-                lineNumber: 537,
+                lineNumber: 653,
                 columnNumber: 7
             }, this)
         ]
