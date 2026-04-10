@@ -1,7 +1,18 @@
 {
-  "lastUpdated": "2026-04-09T07:15:04.331Z",
+  "lastUpdated": "2026-04-10T07:19:58.268Z",
   "owner": "razzyshmazzy",
   "repos": [
+    {
+      "name": "marinhacks",
+      "description": null,
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/marinhacks",
+      "homepage": null,
+      "updatedAt": "2026-04-10T02:34:02Z",
+      "topics": [],
+      "summary": null
+    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -9,7 +20,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-04-08T07:10:58Z",
+      "updatedAt": "2026-04-09T07:15:08Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
