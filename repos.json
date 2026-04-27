@@ -1,44 +1,7 @@
 {
-  "lastUpdated": "2026-04-26T07:21:07.298Z",
+  "lastUpdated": "2026-04-27T08:12:28.570Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "library",
-      "description": "Using APIs from open source libraries, displays pdfs",
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/library",
-      "homepage": null,
-      "updatedAt": "2026-04-26T03:46:17Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Browser-based PDF viewer that integrates open-source library APIs to fetch, render, and navigate PDF documents in the browser.",
-        "techStack": {
-          "languages": [
-            "JavaScript"
-          ],
-          "frameworks": [],
-          "tools": [
-            "PDF.js",
-            "Open Library API"
-          ]
-        },
-        "architecture": "Single-page frontend that queries open-source library APIs for book/document metadata, fetches PDF files, and renders them using a JavaScript PDF engine with page navigation controls.",
-        "entryPoints": [
-          "index.html"
-        ],
-        "keyFiles": [
-          "viewer.js",
-          "api.js"
-        ],
-        "setup": "Open index.html — no server required",
-        "openQuestions": [
-          "Which library API is used — Open Library, Internet Archive?",
-          "Is there search/filter by title or author?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -46,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-04-25T07:06:49Z",
+      "updatedAt": "2026-04-26T07:21:12Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -91,6 +54,43 @@
         "openQuestions": [
           "Add a dark/light theme toggle?",
           "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "library",
+      "description": "Using APIs from open source libraries, displays pdfs",
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/library",
+      "homepage": null,
+      "updatedAt": "2026-04-26T03:46:17Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Browser-based PDF viewer that integrates open-source library APIs to fetch, render, and navigate PDF documents in the browser.",
+        "techStack": {
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": [
+            "PDF.js",
+            "Open Library API"
+          ]
+        },
+        "architecture": "Single-page frontend that queries open-source library APIs for book/document metadata, fetches PDF files, and renders them using a JavaScript PDF engine with page navigation controls.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "viewer.js",
+          "api.js"
+        ],
+        "setup": "Open index.html — no server required",
+        "openQuestions": [
+          "Which library API is used — Open Library, Internet Archive?",
+          "Is there search/filter by title or author?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
