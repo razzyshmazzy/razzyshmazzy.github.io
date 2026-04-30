@@ -621,10 +621,6 @@
     position: static;
   }
 
-  .sticky {
-    position: sticky;
-  }
-
   .start {
     inset-inline-start: var(--spacing);
   }
@@ -711,10 +707,6 @@
 
   .transform {
     transform: var(--tw-rotate-x, ) var(--tw-rotate-y, ) var(--tw-rotate-z, ) var(--tw-skew-x, ) var(--tw-skew-y, );
-  }
-
-  .resize {
-    resize: both;
   }
 
   .items-center {
@@ -837,6 +829,10 @@
     color: var(--secondary-foreground);
   }
 
+  .italic {
+    font-style: italic;
+  }
+
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
@@ -846,19 +842,8 @@
     outline-width: 1px;
   }
 
-  .blur {
-    --tw-blur: blur(8px);
-    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
-  }
-
   .filter {
     filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
-  }
-
-  .transition {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
   .transition-all {
@@ -1792,24 +1777,31 @@ body {
 .quote-divider {
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  border-bottom: 1px solid var(--border);
   background: #05050599;
   justify-content: center;
   align-items: center;
+  min-height: 156px;
   padding: 1.5rem 2rem;
   display: flex;
   position: relative;
   overflow: hidden;
 }
 
-.quote-divider:after {
+.quote-divider:before, .quote-divider:after {
   content: "";
   background: linear-gradient(90deg, #0000 0%, #ffffff26 30%, #ffffff40 50%, #ffffff26 70%, #0000 100%);
   height: 1px;
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
+}
+
+.quote-divider:before {
+  top: 0;
+}
+
+.quote-divider:after {
+  bottom: 0;
 }
 
 .quote-inner {

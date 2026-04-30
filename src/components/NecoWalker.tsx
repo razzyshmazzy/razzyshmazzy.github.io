@@ -3,6 +3,13 @@
 import { useEffect, useRef } from 'react';
 import { parseGIF, decompressFrames } from 'gifuct-js';
 import type { ParsedFrame } from 'gifuct-js';
+import {
+  loadShelves,
+  SHELVES_CHANGED_EVENT,
+  type Shelf,
+} from '@/lib/shelves';
+
+type Surface = { y: number; left: number; right: number };
 
 const HEIGHT = 96;
 const FALL_HEIGHT = 300;
@@ -61,6 +68,14 @@ export default function NecoWalker() {
 
     const basePageY = img.getBoundingClientRect().top + window.scrollY;
 
+    // ── shelves (only landing surfaces) ──
+    let currentShelves: Shelf[] = loadShelves();
+    const onShelvesChanged = (e: Event) => {
+      const detail = (e as CustomEvent<Shelf[]>).detail;
+      if (Array.isArray(detail)) currentShelves = detail;
+    };
+    window.addEventListener(SHELVES_CHANGED_EVENT, onShelvesChanged);
+
     // ── state ──
     let x = -HEIGHT;
     let fallY = 0;
@@ -72,6 +87,7 @@ export default function NecoWalker() {
     let rafId: number;
     let stareTimer: ReturnType<typeof setTimeout> | null = null;
     let lastCursorX = 0;
+    let lastCursorY = 0;
 
     // idle sequence state
     let walkStartTime = 0;
@@ -87,14 +103,16 @@ export default function NecoWalker() {
     // fall animation state
     let fallStartY = 0;
     let fallDistance = 0;
+    // Feet are always at canvas-bottom (basePageY + fallY + FALL_HEIGHT).
+    const SNAP_THRESHOLD = 10;
     let fallDuration = 0;
     let fallStartTime = 0;
     let fallFrameOffset = 0;
     let rescanCounter = 0;
 
     // surface tracking
-    let targetSurface: Element | null = null;
-    let landedSurface: Element | null = null;
+    let targetSurface: Surface | null = null;
+    let landedSurface: Surface | null = null;
 
     // gif frame data
     let gifFrames: ParsedFrame[] = [];
@@ -207,93 +225,25 @@ export default function NecoWalker() {
       applyImgTransform();
     }
 
-    const VISUAL_TAGS = new Set([
-      'IMG', 'SVG', 'CANVAS', 'VIDEO', 'INPUT', 'BUTTON', 'SELECT',
-      'TEXTAREA', 'HR', 'PICTURE', 'IFRAME', 'OBJECT', 'EMBED',
-    ]);
-
-    // Viable ground: any element with visual presence that is substantial
-    // enough to serve as a landing surface. Based on the "razzyshmazzy" h1
-    // as the baseline — visible text with no background/border still counts.
-    const CONTENT_TAGS = new Set([
-      'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'A',
-      'LABEL', 'LI', 'TD', 'TH', 'STRONG', 'EM', 'B', 'I', 'SMALL',
-      'CODE', 'PRE', 'BLOCKQUOTE', 'FIGCAPTION', 'DT', 'DD',
-    ]);
-    const MIN_TEXT_SURFACE_WIDTH = 60;
-
-    function isVisualElement(el: Element): boolean {
-      if (el === img || el === canvas) return false;
-      const rect = el.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return false;
-      const style = getComputedStyle(el);
-      if (style.display === 'none' || style.visibility === 'hidden') return false;
-      if (parseFloat(style.opacity) === 0) return false;
-      // Decorative overlays are not ground
-      if (style.pointerEvents === 'none') return false;
-
-      // Intrinsically visual elements (img, svg, canvas, button, etc.)
-      if (VISUAL_TAGS.has(el.tagName)) return true;
-
-      // Has visible background
-      const bg = style.backgroundColor;
-      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return true;
-
-      // Has background image
-      if (style.backgroundImage && style.backgroundImage !== 'none') return true;
-
-      // Has visible border on any side
-      const bw = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth)
-        + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-      if (bw > 0) {
-        const bc = style.borderColor;
-        if (bc && bc !== 'transparent' && bc !== 'rgba(0, 0, 0, 0)') return true;
-      }
-
-      // Has box-shadow
-      if (style.boxShadow && style.boxShadow !== 'none') return true;
-
-      // Visible text in a content element — must be wide enough to walk on
-      // (filters out individual letter spans while keeping headings, paragraphs)
-      if (rect.width >= MIN_TEXT_SURFACE_WIDTH) {
-        const text = el.textContent?.trim();
-        if (text && text.length > 0) {
-          if (el.children.length === 0 || CONTENT_TAGS.has(el.tagName)) return true;
-        }
-      }
-
-      return false;
-    }
-
-    type SurfaceInfo = { element: Element | null; pageY: number };
-
+    // Shelves are her ONLY landing surfaces.
+    // Returns the closest shelf below (or at, when inclusive) the char that
+    // horizontally overlaps the char's footprint, or null.
+    // Drops use inclusive=true (cursor exactly on a shelf y still counts).
+    // Edge falls use inclusive=false (the shelf she just left must be excluded).
     function findNearestSurface(
-      charBottomPageY: number,
+      referenceY: number,
       charLeft: number,
-      charRight: number
-    ): SurfaceInfo {
-      const viewportFloor = window.scrollY + window.innerHeight;
-      let nearest = viewportFloor;
-      let nearestElement: Element | null = null;
-
-      const candidates = document.body.querySelectorAll('*');
-      for (let i = 0; i < candidates.length; i++) {
-        const el = candidates[i];
-        const rect = el.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) continue;
-        const elTopPage = rect.top + window.scrollY;
-        if (elTopPage <= charBottomPageY) continue;
-        if (elTopPage >= nearest) continue;
-        if (elTopPage > charBottomPageY + 2000) continue;
-        const elLeft = rect.left;
-        const elRight = rect.right;
-        if (charRight <= elLeft || charLeft >= elRight) continue;
-        if (!isVisualElement(el)) continue;
-        nearest = elTopPage;
-        nearestElement = el;
+      charRight: number,
+      inclusive = false
+    ): Surface | null {
+      let nearest: Surface | null = null;
+      for (const shelf of currentShelves) {
+        if (inclusive ? shelf.y < referenceY : shelf.y <= referenceY) continue;
+        if (shelf.x2 <= charLeft || shelf.x1 >= charRight) continue;
+        if (nearest !== null && shelf.y >= nearest.y) continue;
+        nearest = { y: shelf.y, left: shelf.x1, right: shelf.x2 };
       }
-
-      return { element: nearestElement, pageY: nearest };
+      return nearest;
     }
 
     function showImg() {
@@ -331,20 +281,38 @@ export default function NecoWalker() {
 
     // ── unified fall function (shared by drag-drop and scroll-trigger) ──
     function beginFall(cursorX: number | null) {
-      // fallY must be pre-set for canvas FALL_HEIGHT before calling this
-      const charBottomPageY = basePageY + fallY + FALL_HEIGHT;
+      const fromDrop = cursorX !== null;
+
+      // Feet are always the canvas bottom.
+      const feetPageY = basePageY + fallY + FALL_HEIGHT;
       const displayWidth = getCharDisplayWidth();
       const charLeft = x;
       const charRight = x + displayWidth;
 
-      const surface = findNearestSurface(charBottomPageY, charLeft, charRight);
-      targetSurface = surface.element;
+      // inclusive=true for drops so a shelf exactly at canvas-bottom still snaps.
+      const surface = findNearestSurface(feetPageY, charLeft, charRight, fromDrop);
 
+      if (!surface) {
+        // No shelf catches her — abort the fall, resume free-walk in place.
+        // Realign img bottom (HEIGHT) to where canvas bottom (FALL_HEIGHT) was.
+        targetSurface = null;
+        landedSurface = null;
+        fallY = fallY + FALL_HEIGHT - HEIGHT;
+        showImg();
+        img.style.zIndex = String(NORMAL_Z);
+        img.style.pointerEvents = '';
+        isAnimating = false;
+        resumeMoving();
+        return;
+      }
+
+      targetSurface = surface;
       fallStartY = fallY;
-      fallDistance = surface.pageY - charBottomPageY;
+      fallDistance = surface.y - feetPageY;
 
-      if (fallDistance <= 0) {
-        fallY = surface.pageY - basePageY - FALL_HEIGHT;
+      // Snap only when canvas-bottom is within SNAP_THRESHOLD above the shelf.
+      if (fallDistance < SNAP_THRESHOLD) {
+        fallY = surface.y - basePageY - FALL_HEIGHT;
         land();
         return;
       }
@@ -377,10 +345,7 @@ export default function NecoWalker() {
 
       // Adjust fallY so img bottom aligns with surface top
       if (landedSurface) {
-        const surfPageY = landedSurface.getBoundingClientRect().top + window.scrollY;
-        fallY = surfPageY - basePageY - HEIGHT;
-      } else {
-        fallY = window.scrollY + window.innerHeight - basePageY - HEIGHT;
+        fallY = landedSurface.y - basePageY - HEIGHT;
       }
 
       showImg();
@@ -402,8 +367,7 @@ export default function NecoWalker() {
 
       // Adjust fallY from img HEIGHT to canvas FALL_HEIGHT, keeping bottom at surface top
       if (landedSurface) {
-        const surfPageY = landedSurface.getBoundingClientRect().top + window.scrollY;
-        fallY = surfPageY - basePageY - FALL_HEIGHT;
+        fallY = landedSurface.y - basePageY - FALL_HEIGHT;
       }
       landedSurface = null;
 
@@ -415,17 +379,15 @@ export default function NecoWalker() {
       // ── walking phase ──
       if (phase === 'walking') {
         if (landedSurface) {
-          // Walk on landed surface — track its Y live
-          const surfRect = landedSurface.getBoundingClientRect();
-          const surfPageY = surfRect.top + window.scrollY;
-          fallY = surfPageY - basePageY - HEIGHT;
+          // Walk on landed shelf — y is fixed page-coord
+          fallY = landedSurface.y - basePageY - HEIGHT;
 
           x += moveSpeed() * direction;
 
-          // Edge detection: char center beyond surface edge → fall
+          // Edge detection: char center beyond shelf edge → fall
           const charRect = img.getBoundingClientRect();
           const charCenter = charRect.left + charRect.width / 2;
-          if (charCenter < surfRect.left || charCenter > surfRect.right) {
+          if (charCenter < landedSurface.left || charCenter > landedSurface.right) {
             triggerEdgeFall();
           } else {
             applyImgTransform();
@@ -445,10 +407,9 @@ export default function NecoWalker() {
         }
       }
 
-      // ── standing / emoting — track surface Y ──
+      // ── standing / emoting — anchor to shelf Y ──
       if ((phase === 'standing' || phase === 'emoting') && landedSurface) {
-        const surfPageY = landedSurface.getBoundingClientRect().top + window.scrollY;
-        fallY = surfPageY - basePageY - HEIGHT;
+        fallY = landedSurface.y - basePageY - HEIGHT;
         applyImgTransform();
       }
 
@@ -467,37 +428,32 @@ export default function NecoWalker() {
         const frameIndex = fallFrameOffset + Math.floor(posProgress * remainingFrames);
         drawFrame(frameIndex);
 
-        // Live collision check against target surface
-        const charBottomPageY = basePageY + fallY + FALL_HEIGHT;
-        let surfacePageY: number;
-        if (targetSurface) {
-          surfacePageY = targetSurface.getBoundingClientRect().top + window.scrollY;
-        } else {
-          surfacePageY = window.scrollY + window.innerHeight;
-        }
+        // Live collision check — feet = canvas bottom
+        const feetPageY = basePageY + fallY + FALL_HEIGHT;
+        const surfacePageY = targetSurface ? targetSurface.y : Infinity;
 
-        if (charBottomPageY >= surfacePageY) {
-          // Contact — snap and land
+        if (feetPageY >= surfacePageY) {
+          // Canvas bottom reached shelf — final frame, then land
           fallY = surfacePageY - basePageY - FALL_HEIGHT;
           applyCanvasTransform(fallY);
           drawFrame(totalFrames);
           land();
         } else if (posProgress >= 1) {
-          // Time-based fallback
-          fallY = fallStartY + fallDistance;
+          // Time expired — snap to target shelf
+          fallY = surfacePageY === Infinity ? fallStartY + fallDistance : surfacePageY - basePageY - FALL_HEIGHT;
           applyCanvasTransform(fallY);
           drawFrame(totalFrames);
           land();
         } else {
-          // Lightweight re-scan for closer surfaces
+          // Lightweight re-scan for closer shelves
           rescanCounter++;
           if (rescanCounter >= RESCAN_INTERVAL) {
             rescanCounter = 0;
             const displayWidth = getCharDisplayWidth();
-            const surface = findNearestSurface(charBottomPageY, x, x + displayWidth);
+            const surface = findNearestSurface(feetPageY, x, x + displayWidth);
 
-            if (surface.pageY < surfacePageY) {
-              // Closer surface found — remap remaining fall
+            if (surface && surface.y < surfacePageY) {
+              // Closer shelf found — remap remaining fall
               const currentFrame = Math.min(
                 fallFrameOffset + Math.floor(posProgress * remainingFrames),
                 totalFrames - 1
@@ -505,12 +461,12 @@ export default function NecoWalker() {
               fallFrameOffset = currentFrame;
               fallStartY = fallY;
               fallStartTime = performance.now();
-              fallDistance = surface.pageY - charBottomPageY;
+              fallDistance = surface.y - feetPageY;
               fallDuration = Math.max(
                 MIN_FALL_DURATION,
                 Math.sqrt(2 * fallDistance / G_PX_PER_MS2)
               );
-              targetSurface = surface.element;
+              targetSurface = surface;
             }
           }
         }
@@ -531,6 +487,7 @@ export default function NecoWalker() {
       grabOffsetX = clientX - r.left;
       grabOffsetY = clientY - r.top;
       lastCursorX = clientX;
+      lastCursorY = clientY;
 
       showCanvas();
       canvas.style.height = `${FALL_HEIGHT}px`;
@@ -551,6 +508,7 @@ export default function NecoWalker() {
 
     function moveDrag(clientX: number, clientY: number) {
       lastCursorX = clientX;
+      lastCursorY = clientY;
       x = clientX - grabOffsetX;
       fallY = clientY - grabOffsetY + window.scrollY - basePageY;
       applyCanvasTransform(fallY);
@@ -562,7 +520,7 @@ export default function NecoWalker() {
       document.removeEventListener('touchmove', onTouchMove);
       document.removeEventListener('touchend', onTouchEnd);
 
-      // fallY already set by drag — canvas bottom is at basePageY + fallY + FALL_HEIGHT
+      // fallY left as-is — fall starts visually from where she was held.
       beginFall(lastCursorX);
     }
 
@@ -626,6 +584,7 @@ export default function NecoWalker() {
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener(SHELVES_CHANGED_EVENT, onShelvesChanged);
       cancelAnimationFrame(rafId);
       cancelSequence();
       img.removeEventListener('mousedown', onMouseDown);

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Hero from '@/components/Hero';
 import NecoWalker from '@/components/NecoWalker';
+import NecoShelfEditor from '@/components/NecoShelfEditor';
 import QuoteDivider from '@/components/QuoteDivider';
 import RepoGrid from '@/components/RepoGrid';
 import AboutMe from '@/components/AboutMe';
@@ -59,6 +60,7 @@ export default function HomePage() {
       </div>
 
       <AboutMe />
+      <NecoShelfEditor />
     </>
   );
 }

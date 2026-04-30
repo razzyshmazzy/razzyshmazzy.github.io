@@ -462,19 +462,19 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1.5rem 2rem;
+  min-height: 156px;
   background: rgba(5,5,5,0.6);
   backdrop-filter: blur(4px);
-  border-bottom: 1px solid var(--border);
   position: relative;
   overflow: hidden;
 }
 
+.quote-divider::before,
 .quote-divider::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -485,6 +485,9 @@ body {
     transparent 100%
   );
 }
+
+.quote-divider::before { top: 0; }
+.quote-divider::after  { bottom: 0; }
 
 .quote-inner {
   max-width: 680px;
