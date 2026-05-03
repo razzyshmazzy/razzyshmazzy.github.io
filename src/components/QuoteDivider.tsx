@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Quote {
   text: string;
@@ -21,6 +21,11 @@ function parseQuotes(raw: string): Quote[] {
 
 export default function QuoteDivider() {
   const [quote, setQuote] = useState<Quote | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 0.75;
+  }, []);
 
   useEffect(() => {
     fetch('/quotes.txt')
@@ -36,7 +41,27 @@ export default function QuoteDivider() {
 
   return (
     <div className="quote-divider">
-      <div className="quote-inner">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          pointerEvents: 'none',
+          zIndex: 0,
+          opacity: 0.4,
+        }}
+      >
+        <source src="/roses.mp4" type="video/mp4" />
+      </video>
+      <div className="quote-inner" style={{ position: 'relative', zIndex: 1 }}>
         {quote ? (
           <>
             <p className="quote-text">{quote.text}</p>
