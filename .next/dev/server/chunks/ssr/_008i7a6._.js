@@ -217,13 +217,14 @@ function snapShelfToEdges(shelf, viewportWidth) {
     };
 }
 // Named anchor Y values for key layout boundaries
-const HERO_SHELF_Y = 373; // shelf in hero section
-const QUOTE_TOP_Y = 788; // top border of quote divider
-const QUOTE_BOTTOM_Y = 944; // bottom border of quote divider
-const REPO_TOP_Y = QUOTE_BOTTOM_Y + 0; // repo section top (same as quote bottom)
-const REPO_SHELF_Y = QUOTE_BOTTOM_Y + 479; // 1423 — shelf across repo grid
-const REPO_MID_Y = REPO_SHELF_Y + 145; // 1568 — narrow shelf in repo grid
-const ABOUT_TOP_Y = REPO_MID_Y + 69; // 1637 — shelf at about section top
+const HERO_SHELF_Y = 373;
+const QUOTE_TOP_Y = 788;
+const QUOTE_BOTTOM_Y = 944;
+// All shelves below are expressed as offsets from QUOTE_BOTTOM_Y
+const REPO_TOP_Y = QUOTE_BOTTOM_Y + 0; // 944  — top of repos (same line)
+const REPO_SHELF_Y = QUOTE_BOTTOM_Y + 511; // 1455 — shelf across repo grid
+const REPO_MID_Y = QUOTE_BOTTOM_Y + 656; // 1600 — narrow shelf in repo grid
+const ABOUT_TOP_Y = QUOTE_BOTTOM_Y + 661; // 1605 — about section top
 const BASELINE_SHELVES = [
     {
         y: HERO_SHELF_Y,
@@ -362,7 +363,7 @@ function NecoWalker() {
         let fallStartY = 0;
         let fallDistance = 0;
         // Feet are always at canvas-bottom (basePageY + fallY + FALL_HEIGHT).
-        const SNAP_THRESHOLD = 10;
+        const SNAP_THRESHOLD = 5;
         let fallDuration = 0;
         let fallStartTime = 0;
         let fallFrameOffset = 0;
@@ -487,6 +488,7 @@ function NecoWalker() {
         }
         function showImg() {
             img.style.display = '';
+            img.style.pointerEvents = '';
             canvas.style.display = 'none';
         }
         function showCanvas() {
@@ -513,37 +515,39 @@ function NecoWalker() {
         // ── unified fall function (shared by drag-drop and scroll-trigger) ──
         function beginFall(cursorX) {
             const fromDrop = cursorX !== null;
-            // Feet are always the canvas bottom.
-            const feetPageY = basePageY + fallY + FALL_HEIGHT;
             const displayWidth = getCharDisplayWidth();
+            // For drops: search reference = cursor Y (the user's release point).
+            // For edge/scroll: search reference = canvas-bottom (pre-aligned by caller).
+            // Canvas position is NOT changed — fallStartY = current fallY in both cases.
+            const canvasBottomPageY = basePageY + fallY + FALL_HEIGHT;
+            const searchRefY = fromDrop ? lastCursorY + window.scrollY : canvasBottomPageY;
+            if (fromDrop) {
+                x = cursorX - displayWidth / 2;
+            }
             const charLeft = x;
             const charRight = x + displayWidth;
-            // inclusive=true for drops so a shelf exactly at canvas-bottom still snaps.
-            const surface = findNearestSurface(feetPageY, charLeft, charRight, fromDrop);
+            const surface = findNearestSurface(searchRefY, charLeft, charRight, fromDrop);
             if (!surface) {
-                // No shelf catches her — abort the fall, resume free-walk in place.
-                // Realign img bottom (HEIGHT) to where canvas bottom (FALL_HEIGHT) was.
                 targetSurface = null;
                 landedSurface = null;
-                fallY = fallY + FALL_HEIGHT - HEIGHT;
+                fallY = canvasBottomPageY - basePageY - HEIGHT;
                 showImg();
                 img.style.zIndex = String(NORMAL_Z);
-                img.style.pointerEvents = '';
                 isAnimating = false;
                 resumeMoving();
                 return;
             }
             targetSurface = surface;
             fallStartY = fallY;
-            fallDistance = surface.y - feetPageY;
-            // Snap only when canvas-bottom is within SNAP_THRESHOLD above the shelf.
-            if (fallDistance < SNAP_THRESHOLD) {
+            // Canvas-bottom travels from its current position to the shelf.
+            fallDistance = surface.y - canvasBottomPageY;
+            // Snap when cursor is within SNAP_THRESHOLD of the shelf, OR when
+            // canvas-bottom is already at or past the shelf (fallDistance <= 0 would
+            // make fallDuration NaN and crash the animation).
+            if (surface.y - searchRefY < SNAP_THRESHOLD || fallDistance <= 0) {
                 fallY = surface.y - basePageY - FALL_HEIGHT;
                 land();
                 return;
-            }
-            if (cursorX !== null) {
-                x = cursorX - displayWidth / 2;
             }
             fallDuration = Math.max(MIN_FALL_DURATION, Math.sqrt(2 * fallDistance / G_PX_PER_MS2));
             fallStartTime = performance.now();
@@ -572,7 +576,6 @@ function NecoWalker() {
             img.src = '/neco-stare.png';
             img.style.height = `${HEIGHT}px`;
             img.style.zIndex = String(NORMAL_Z);
-            img.style.pointerEvents = '';
             applyImgTransform();
             stareTimer = setTimeout(()=>{
                 isAnimating = false;
@@ -680,7 +683,6 @@ function NecoWalker() {
             grabOffsetX = clientX - r.left;
             grabOffsetY = clientY - r.top;
             lastCursorX = clientX;
-            lastCursorY = clientY;
             showCanvas();
             canvas.style.height = `${FALL_HEIGHT}px`;
             canvas.style.width = 'auto';
@@ -796,7 +798,7 @@ function NecoWalker() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/NecoWalker.tsx",
-                lineNumber: 604,
+                lineNumber: 608,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("canvas", {
@@ -809,7 +811,7 @@ function NecoWalker() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/NecoWalker.tsx",
-                lineNumber: 612,
+                lineNumber: 616,
                 columnNumber: 7
             }, this)
         ]
@@ -1411,8 +1413,13 @@ function QuoteDivider() {
 "[project]/src/components/RepoCard.module.css [app-ssr] (css module)", ((__turbopack_context__) => {
 
 __turbopack_context__.v({
+  "body": "RepoCard-module__OdBfVW__body",
   "card": "RepoCard-module__OdBfVW__card",
-  "cardTitle": "RepoCard-module__OdBfVW__cardTitle",
+  "desc": "RepoCard-module__OdBfVW__desc",
+  "image": "RepoCard-module__OdBfVW__image",
+  "imagePlaceholder": "RepoCard-module__OdBfVW__imagePlaceholder",
+  "imageWrap": "RepoCard-module__OdBfVW__imageWrap",
+  "name": "RepoCard-module__OdBfVW__name",
   "perspective": "RepoCard-module__OdBfVW__perspective",
 });
 }),
@@ -1428,159 +1435,74 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCar
 'use client';
 ;
 ;
-function timeAgo(iso) {
-    if (!iso) return '';
-    const s = (Date.now() - new Date(iso).getTime()) / 1000;
-    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-    if (s < 2592000) return `${Math.floor(s / 86400)}d ago`;
-    return `${Math.floor(s / 2592000)}mo ago`;
-}
 function RepoCard({ repo }) {
-    const s = repo.summary;
-    const techItems = s ? [
-        ...s.techStack?.languages ?? [],
-        ...s.techStack?.frameworks ?? []
-    ].slice(0, 5) : [];
+    const href = repo.homepage || repo.url;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].perspective,
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
-            className: `repo-card ${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].card}`,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+            href: href,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: `${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].card} repo-card`,
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "card-top",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                            className: `repo-name-link ${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].cardTitle}`,
-                            href: repo.url,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
-                            children: repo.name
-                        }, void 0, false, {
-                            fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 29,
-                            columnNumber: 9
-                        }, this),
-                        repo.language && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                            className: "lang-badge",
-                            children: repo.language
-                        }, void 0, false, {
-                            fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 38,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 28,
-                    columnNumber: 7
-                }, this),
-                repo.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                    className: "repo-desc",
-                    children: repo.description
-                }, void 0, false, {
-                    fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 44,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "summary-box",
-                    children: s ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "summary-purpose",
-                                children: s.purpose
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 49,
-                                columnNumber: 13
-                            }, this),
-                            techItems.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "tech-pills",
-                                children: techItems.map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "tech-pill",
-                                        children: t
-                                    }, t, false, {
-                                        fileName: "[project]/src/components/RepoGrid.tsx",
-                                        lineNumber: 53,
-                                        columnNumber: 19
-                                    }, this))
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 51,
-                                columnNumber: 15
-                            }, this),
-                            s.architecture && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "summary-arch",
-                                children: s.architecture.length > 160 ? s.architecture.slice(0, 160) + '…' : s.architecture
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/RepoGrid.tsx",
-                                lineNumber: 58,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        style: {
-                            color: 'var(--muted)',
-                            fontSize: '0.82rem'
-                        },
-                        children: "Analysis pending — runs nightly via GitHub Actions."
+                    className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].imageWrap,
+                    children: repo.image ? // eslint-disable-next-line @next/next/no-img-element
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                        src: repo.image,
+                        alt: repo.name,
+                        className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].image
                     }, void 0, false, {
                         fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 66,
-                        columnNumber: 11
+                        lineNumber: 24,
+                        columnNumber: 13
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].imagePlaceholder,
+                        children: repo.name
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/RepoGrid.tsx",
+                        lineNumber: 26,
+                        columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 46,
-                    columnNumber: 7
+                    lineNumber: 21,
+                    columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "card-meta",
+                    className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].body,
                     children: [
-                        repo.stars ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                            children: [
-                                "★ ",
-                                repo.stars
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 72,
-                            columnNumber: 23
-                        }, this) : null,
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                            children: timeAgo(repo.updatedAt)
+                            className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].name,
+                            children: repo.name
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 73,
-                            columnNumber: 9
+                            lineNumber: 30,
+                            columnNumber: 11
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                            className: "card-meta-link",
-                            href: repo.url,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
-                            children: "GitHub →"
+                        repo.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$ssr$5d$__$28$css__module$29$__["default"].desc,
+                            children: repo.description
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 74,
-                            columnNumber: 9
+                            lineNumber: 32,
+                            columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 71,
-                    columnNumber: 7
+                    lineNumber: 29,
+                    columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 27,
-            columnNumber: 5
+            lineNumber: 15,
+            columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 26,
+        lineNumber: 14,
         columnNumber: 5
     }, this);
 }
@@ -1590,15 +1512,15 @@ function RepoGrid({ repos }) {
             className: "repos-grid",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid-empty",
-                children: "No repos match your search."
+                children: "No repos to show."
             }, void 0, false, {
                 fileName: "[project]/src/components/RepoGrid.tsx",
-                lineNumber: 92,
+                lineNumber: 44,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 91,
+            lineNumber: 43,
             columnNumber: 7
         }, this);
     }
@@ -1608,12 +1530,12 @@ function RepoGrid({ repos }) {
                 repo: repo
             }, repo.name, false, {
                 fileName: "[project]/src/components/RepoGrid.tsx",
-                lineNumber: 100,
+                lineNumber: 52,
                 columnNumber: 9
             }, this))
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 98,
+        lineNumber: 50,
         columnNumber: 5
     }, this);
 }

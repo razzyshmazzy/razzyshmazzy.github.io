@@ -60,8 +60,9 @@
     },
     {
       "name": "doccer",
-      "description": "Compiles all google docs and provides a downloadable pdf",
+      "description": "Compiles all google docs and provides a downloadable PDF",
       "language": "HTML",
+      "image":"../screenshots/doccer.png",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/doccer",
       "homepage": null,
@@ -100,7 +101,7 @@
     },
     {
       "name": "library",
-      "description": "Using APIs from open source libraries, displays pdfs",
+      "description": "A digital library that synthesizes from (as of now) 3 different online literature databases",
       "language": "JavaScript",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/library",
@@ -172,7 +173,7 @@
     },
     {
       "name": "atlens",
-      "description": "Understands a codebase",
+      "description": "GitHub repo goes in. AI overview, breakdown, and synthesis comes out",
       "language": "JavaScript",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/atlens",

@@ -16,13 +16,14 @@ export function snapShelfToEdges(shelf: Shelf, viewportWidth: number): Shelf {
 }
 
 // Named anchor Y values for key layout boundaries
-const HERO_SHELF_Y    = 373;   // shelf in hero section
-const QUOTE_TOP_Y     = 788;   // top border of quote divider
-const QUOTE_BOTTOM_Y  = 944;   // bottom border of quote divider
-const REPO_TOP_Y      = QUOTE_BOTTOM_Y + 0;   // repo section top (same as quote bottom)
-const REPO_SHELF_Y    = QUOTE_BOTTOM_Y + 479;  // 1423 — shelf across repo grid
-const REPO_MID_Y      = REPO_SHELF_Y  + 145;  // 1568 — narrow shelf in repo grid
-const ABOUT_TOP_Y     = REPO_MID_Y   + 69;   // 1637 — shelf at about section top
+const HERO_SHELF_Y    = 373;
+const QUOTE_TOP_Y     = 788;
+const QUOTE_BOTTOM_Y  = 944;
+// All shelves below are expressed as offsets from QUOTE_BOTTOM_Y
+const REPO_TOP_Y      = QUOTE_BOTTOM_Y + 0;    // 944  — top of repos (same line)
+const REPO_SHELF_Y    = QUOTE_BOTTOM_Y + 511;  // 1455 — shelf across repo grid
+const REPO_MID_Y      = QUOTE_BOTTOM_Y + 656;  // 1600 — narrow shelf in repo grid
+const ABOUT_TOP_Y     = QUOTE_BOTTOM_Y + 661;  // 1605 — about section top
 
 export const BASELINE_SHELVES: Shelf[] = [
   { y: HERO_SHELF_Y,   x1: 499, x2: 899  },

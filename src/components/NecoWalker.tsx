@@ -104,7 +104,7 @@ export default function NecoWalker() {
     let fallStartY = 0;
     let fallDistance = 0;
     // Feet are always at canvas-bottom (basePageY + fallY + FALL_HEIGHT).
-    const SNAP_THRESHOLD = 10;
+    const SNAP_THRESHOLD = 5;
     let fallDuration = 0;
     let fallStartTime = 0;
     let fallFrameOffset = 0;
@@ -285,37 +285,27 @@ export default function NecoWalker() {
       const fromDrop = cursorX !== null;
       const displayWidth = getCharDisplayWidth();
 
-      // For drops: anchor point 1 = cursor (where user released).
-      // Reposition canvas so its bottom is exactly at the cursor, then search
-      // for the next shelf strictly below that point.
-      // For edge/scroll falls: canvas was pre-aligned by the caller; use its bottom.
-      let feetPageY: number;
+      // For drops: search reference = cursor Y (the user's release point).
+      // For edge/scroll: search reference = canvas-bottom (pre-aligned by caller).
+      // Canvas position is NOT changed — fallStartY = current fallY in both cases.
+      const canvasBottomPageY = basePageY + fallY + FALL_HEIGHT;
+      const searchRefY = fromDrop
+        ? lastCursorY + window.scrollY
+        : canvasBottomPageY;
+
       if (fromDrop) {
-        const cursorPageY = lastCursorY + window.scrollY;
-        feetPageY = cursorPageY;
-        fallY = cursorPageY - basePageY - FALL_HEIGHT;
         x = cursorX! - displayWidth / 2;
-      } else {
-        feetPageY = basePageY + fallY + FALL_HEIGHT;
       }
 
       const charLeft = x;
       const charRight = x + displayWidth;
 
-      // Anchor point 2 = next shelf below the cursor (inclusive: shelf exactly
-      // at cursor counts for drops).
-      const surface = findNearestSurface(feetPageY, charLeft, charRight, fromDrop);
+      const surface = findNearestSurface(searchRefY, charLeft, charRight, fromDrop);
 
       if (!surface) {
-        // No shelf catches her — abort, resume walking from current img position.
         targetSurface = null;
         landedSurface = null;
-        if (fromDrop) {
-          // Reposition img bottom to cursor so she doesn't teleport.
-          fallY = feetPageY - basePageY - HEIGHT;
-        } else {
-          fallY = fallY + FALL_HEIGHT - HEIGHT;
-        }
+        fallY = canvasBottomPageY - basePageY - HEIGHT;
         showImg();
         img.style.zIndex = String(NORMAL_Z);
         isAnimating = false;
@@ -324,12 +314,14 @@ export default function NecoWalker() {
       }
 
       targetSurface = surface;
-      // fallDistance = gap between cursor and shelf (point 1 → point 2).
-      fallDistance = surface.y - feetPageY;
       fallStartY = fallY;
+      // Canvas-bottom travels from its current position to the shelf.
+      fallDistance = surface.y - canvasBottomPageY;
 
-      // Snap when cursor is within SNAP_THRESHOLD of the shelf.
-      if (fallDistance < SNAP_THRESHOLD) {
+      // Snap when cursor is within SNAP_THRESHOLD of the shelf, OR when
+      // canvas-bottom is already at or past the shelf (fallDistance <= 0 would
+      // make fallDuration NaN and crash the animation).
+      if (surface.y - searchRefY < SNAP_THRESHOLD || fallDistance <= 0) {
         fallY = surface.y - basePageY - FALL_HEIGHT;
         land();
         return;
@@ -500,7 +492,6 @@ export default function NecoWalker() {
       grabOffsetX = clientX - r.left;
       grabOffsetY = clientY - r.top;
       lastCursorX = clientX;
-      lastCursorY = clientY;
 
       showCanvas();
       canvas.style.height = `${FALL_HEIGHT}px`;

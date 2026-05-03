@@ -1890,7 +1890,7 @@ body {
 }
 
 .page {
-  padding: 2rem 0 4rem;
+  padding: 4rem 0;
   overflow: hidden;
 }
 
@@ -1988,124 +1988,6 @@ body {
   }
 }
 
-.repo-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  flex-direction: column;
-  gap: .75rem;
-  padding: 1.25rem;
-  transition: border-color .2s;
-  display: flex;
-}
-
-.repo-card:hover {
-  border-color: #555;
-}
-
-.card-top {
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .6rem;
-  display: flex;
-}
-
-.repo-name-link {
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.repo-name-link:hover {
-  color: #bbb;
-}
-
-.repo-desc {
-  color: var(--muted);
-  font-size: .875rem;
-}
-
-.summary-box {
-  border: 1px solid var(--border);
-  background: #0a0a0a;
-  border-radius: 8px;
-  flex-direction: column;
-  flex: 1;
-  gap: .5rem;
-  padding: .85rem 1rem;
-  display: flex;
-}
-
-.summary-purpose {
-  color: var(--text);
-  font-size: .85rem;
-  line-height: 1.55;
-}
-
-.tech-pills {
-  flex-wrap: wrap;
-  gap: .35rem;
-  margin-top: .15rem;
-  display: flex;
-}
-
-.tech-pill {
-  color: #aaa;
-  background: #ffffff0d;
-  border: 1px solid #ffffff1a;
-  border-radius: 20px;
-  padding: .2rem .5rem;
-  font-size: .7rem;
-}
-
-.summary-arch {
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  padding-top: .5rem;
-  font-size: .78rem;
-  line-height: 1.55;
-}
-
-.card-meta {
-  color: var(--muted);
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .85rem;
-  font-size: .78rem;
-  display: flex;
-}
-
-.card-meta-link {
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-left: auto;
-  padding: .2rem .6rem;
-  font-size: .75rem;
-  text-decoration: none;
-  transition: color .15s, border-color .15s;
-}
-
-.card-meta-link:hover {
-  color: #fff;
-  border-color: #fff;
-}
-
-.lang-badge {
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: #999;
-  background: #ffffff0f;
-  border: 1px solid #ffffff1a;
-  border-radius: 20px;
-  padding: .18rem .55rem;
-  font-size: .68rem;
-  font-weight: 700;
-}
-
 .grid-empty {
   text-align: center;
   color: var(--muted);
@@ -2117,7 +1999,7 @@ body {
 .about-me {
   text-align: center;
   max-width: 680px;
-  margin: 4rem auto;
+  margin: 0 auto;
   padding: 2rem;
   position: relative;
 }

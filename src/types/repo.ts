@@ -18,6 +18,7 @@ export interface RepoSummary {
 export interface Repo {
   name: string;
   description: string | null;
+  image: string | null;
   language: string | null;
   stars: number;
   url: string;
