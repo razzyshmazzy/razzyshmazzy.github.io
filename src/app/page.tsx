@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Hero from '@/components/Hero';
 import NecoWalker from '@/components/NecoWalker';
 import NecoShelfEditor from '@/components/NecoShelfEditor';
+import Icarus from '@/components/Icarus';
 import QuoteDivider from '@/components/QuoteDivider';
 import RepoGrid from '@/components/RepoGrid';
 import AboutMe from '@/components/AboutMe';
@@ -61,6 +62,35 @@ export default function HomePage() {
 
       <AboutMe />
       <NecoShelfEditor />
+      <Icarus />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/hoover.png"
+        alt="hoover"
+        style={{
+          position: 'absolute',
+          left: -6,
+          top: 161,
+          width: 452,
+          height: 'auto',
+          pointerEvents: 'none',
+          zIndex: -1,
+        }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/sunny.png"
+        alt="sunny"
+        style={{
+          position: 'absolute',
+          left: 1103,
+          top: 613,
+          width: 200,
+          height: 'auto',
+          pointerEvents: 'none',
+          zIndex: -1,
+        }}
+      />
     </>
   );
 }

@@ -17,6 +17,7 @@ function RepoCard({ repo }: { repo: Repo }) {
         target="_blank"
         rel="noopener noreferrer"
         className={`${styles.card} repo-card`}
+        data-repo={repo.name}
       >
         <div className={styles.imageWrap}>
           {repo.image ? (
