@@ -1,12 +1,2 @@
-alright, so let's plan this.
-
-1. React based + vite -> import tmrw (the 12th)
-2. should have a template to list all files/projects
-    ideas: desktop -> copy mc one? or something similar?
-3. any other functionality:
-    ideas: write in assembly, c, or some esoteric language
-
-but also remember to:
-    - sign up for Stanford AIMI
-    - learn ukulele
-    - go to Northwood Bowmen's club
+- learn ukulele
+- go to Northwood Bowmen's club

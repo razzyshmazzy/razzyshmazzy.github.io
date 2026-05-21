@@ -25,3 +25,9 @@ H.P. Lovecraft, "The Outsider"}
 Vladimir Nabokov, "Lolita"}
 {It's a terrible day for rain.
 Roy Mustang, "Full Metal Alchemist"}
+{What is better - to be born good,
+or to overcome your evil nature through great effort?
+Paarthurnax, "Skyrim"}
+{Imagine a perfect, cloudless midnight, cold as winter ice and shrouded in shadow.
+That is Sithis.
+Lucien Lachance, "Oblivion"}
