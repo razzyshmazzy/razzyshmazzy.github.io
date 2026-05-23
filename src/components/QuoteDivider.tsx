@@ -64,7 +64,7 @@ export default function QuoteDivider() {
       <div className="quote-inner" style={{ position: 'relative', zIndex: 1 }}>
         {quote ? (
           <>
-            <p className="quote-text">{quote.text}</p>
+            <p className="quote-text" style={{ whiteSpace: 'pre' }}>{quote.text}</p>
             {quote.author && (
               <span className="quote-author">{quote.author}</span>
             )}

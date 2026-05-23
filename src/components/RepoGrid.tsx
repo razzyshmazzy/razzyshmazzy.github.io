@@ -7,8 +7,13 @@ interface Props {
   repos: Repo[];
 }
 
+const HREF_OVERRIDES: Record<string, string> = {
+  library: 'https://razzyshmazzy.com/library/',
+  doccer: 'https://doccer.razzyshmazzy.com',
+};
+
 function RepoCard({ repo }: { repo: Repo }) {
-  const href = repo.homepage || repo.url;
+  const href = HREF_OVERRIDES[repo.name] ?? repo.homepage ?? repo.url;
 
   return (
     <div className={styles.perspective}>
