@@ -12,8 +12,13 @@ const HREF_OVERRIDES: Record<string, string> = {
   doccer: 'https://doccer.razzyshmazzy.com',
 };
 
+const IMAGE_OVERRIDES: Record<string, string> = {
+  library: '/screenshots/library.png',
+};
+
 function RepoCard({ repo }: { repo: Repo }) {
   const href = HREF_OVERRIDES[repo.name] ?? repo.homepage ?? repo.url;
+  const image = IMAGE_OVERRIDES[repo.name] ?? repo.image;
 
   return (
     <div className={styles.perspective}>
@@ -25,9 +30,9 @@ function RepoCard({ repo }: { repo: Repo }) {
         data-repo={repo.name}
       >
         <div className={styles.imageWrap}>
-          {repo.image ? (
+          {image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={repo.image} alt={repo.name} className={styles.image} />
+            <img src={image} alt={repo.name} className={styles.image} />
           ) : (
             <div className={styles.imagePlaceholder}>{repo.name}</div>
           )}
