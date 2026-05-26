@@ -1654,6 +1654,9 @@ function QuoteDivider() {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "quote-text",
+                            style: {
+                                whiteSpace: 'pre'
+                            },
                             children: quote.text
                         }, void 0, false, {
                             fileName: "[project]/src/components/QuoteDivider.tsx",
@@ -1725,8 +1728,16 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCar
 'use client';
 ;
 ;
+const HREF_OVERRIDES = {
+    library: 'https://razzyshmazzy.com/library/',
+    doccer: 'https://doccer.razzyshmazzy.com'
+};
+const IMAGE_OVERRIDES = {
+    library: '/screenshots/library.png'
+};
 function RepoCard({ repo }) {
-    const href = repo.homepage || repo.url;
+    const href = HREF_OVERRIDES[repo.name] ?? repo.homepage ?? repo.url;
+    const image = IMAGE_OVERRIDES[repo.name] ?? repo.image;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].perspective,
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1738,26 +1749,26 @@ function RepoCard({ repo }) {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].imageWrap,
-                    children: repo.image ? // eslint-disable-next-line @next/next/no-img-element
+                    children: image ? // eslint-disable-next-line @next/next/no-img-element
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                        src: repo.image,
+                        src: image,
                         alt: repo.name,
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].image
                     }, void 0, false, {
                         fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 25,
+                        lineNumber: 35,
                         columnNumber: 13
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$RepoCard$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].imagePlaceholder,
                         children: repo.name
                     }, void 0, false, {
                         fileName: "[project]/src/components/RepoGrid.tsx",
-                        lineNumber: 27,
+                        lineNumber: 37,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 22,
+                    lineNumber: 32,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1768,7 +1779,7 @@ function RepoCard({ repo }) {
                             children: repo.name
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 31,
+                            lineNumber: 41,
                             columnNumber: 11
                         }, this),
                         repo.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1776,24 +1787,24 @@ function RepoCard({ repo }) {
                             children: repo.description
                         }, void 0, false, {
                             fileName: "[project]/src/components/RepoGrid.tsx",
-                            lineNumber: 33,
+                            lineNumber: 43,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/RepoGrid.tsx",
-                    lineNumber: 30,
+                    lineNumber: 40,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 15,
+            lineNumber: 25,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 14,
+        lineNumber: 24,
         columnNumber: 5
     }, this);
 }
@@ -1807,12 +1818,12 @@ function RepoGrid({ repos }) {
                 children: "No repos to show."
             }, void 0, false, {
                 fileName: "[project]/src/components/RepoGrid.tsx",
-                lineNumber: 45,
+                lineNumber: 55,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/components/RepoGrid.tsx",
-            lineNumber: 44,
+            lineNumber: 54,
             columnNumber: 7
         }, this);
     }
@@ -1822,12 +1833,12 @@ function RepoGrid({ repos }) {
                 repo: repo
             }, repo.name, false, {
                 fileName: "[project]/src/components/RepoGrid.tsx",
-                lineNumber: 53,
+                lineNumber: 63,
                 columnNumber: 9
             }, this))
     }, void 0, false, {
         fileName: "[project]/src/components/RepoGrid.tsx",
-        lineNumber: 51,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -2034,37 +2045,21 @@ function HomePage() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                className: "tower-deco",
                 src: "/hoover.png",
-                alt: "hoover",
-                style: {
-                    position: 'absolute',
-                    left: -6,
-                    top: 161,
-                    width: 452,
-                    height: 'auto',
-                    pointerEvents: 'none',
-                    zIndex: -1
-                }
+                alt: "hoover"
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
                 lineNumber: 67,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                className: "sunny-deco",
                 src: "/sunny.png",
-                alt: "sunny",
-                style: {
-                    position: 'absolute',
-                    left: 1103,
-                    top: 613,
-                    width: 200,
-                    height: 'auto',
-                    pointerEvents: 'none',
-                    zIndex: -1
-                }
+                alt: "sunny"
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 81,
+                lineNumber: 69,
                 columnNumber: 7
             }, this)
         ]

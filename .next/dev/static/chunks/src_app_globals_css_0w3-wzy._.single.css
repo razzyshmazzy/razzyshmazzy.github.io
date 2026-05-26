@@ -365,6 +365,10 @@
     position: static;
   }
 
+  .sticky {
+    position: sticky;
+  }
+
   .start {
     inset-inline-start: var(--spacing);
   }
@@ -590,8 +594,19 @@
     outline-width: 1px;
   }
 
+  .blur {
+    --tw-blur: blur(8px);
+    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
+  }
+
   .filter {
     filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
+  }
+
+  .transition {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
   .transition-all {
@@ -1285,6 +1300,39 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.tower-deco {
+  pointer-events: none;
+  z-index: -1;
+  width: 32.33vw;
+  height: auto;
+  position: absolute;
+  top: 20.35svh;
+  left: -.43vw;
+}
+
+.sunny-deco {
+  pointer-events: none;
+  z-index: -1;
+  width: 14.31vw;
+  height: auto;
+  position: absolute;
+  top: 77.5svh;
+  left: 78.9vw;
+}
+
+@media (max-width: 600px) {
+  .tower-deco {
+    display: none;
+  }
+
+  .sunny-deco {
+    width: 45vw;
+    top: 56svh;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .hero {

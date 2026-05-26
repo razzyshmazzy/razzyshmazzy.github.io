@@ -258,6 +258,48 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
+   DECORATIVE SCENERY — tower (hoover) + sunny figure
+   Calibrated on a 1398×791 viewport, then expressed in
+   viewport units so position/size scale with the screen.
+   Horizontal uses vw (preserves image aspect); vertical
+   uses svh so they track the fold like the hero/quote.
+   ═══════════════════════════════════════════════════ */
+
+.tower-deco {
+  position: absolute;
+  left: -0.43vw;   /* -6px / 1398 */
+  top: 20.35svh;   /* 161px / 791 */
+  width: 32.33vw;  /* 452px / 1398 */
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.sunny-deco {
+  position: absolute;
+  left: 78.9vw;    /* 1103px / 1398 */
+  top: 77.5svh;    /* 613px / 791 */
+  width: 14.31vw;  /* 200px / 1398 */
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Phone: drop the tower, tuck sunny beneath the "razzyshmazzy" name */
+@media (max-width: 600px) {
+  .tower-deco {
+    display: none;
+  }
+
+  .sunny-deco {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 56svh;    /* just below the vertically-centered hero name */
+    width: 45vw;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
    HERO — Noir alleyway scene
    ═══════════════════════════════════════════════════ */
 

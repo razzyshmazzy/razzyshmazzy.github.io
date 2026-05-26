@@ -64,33 +64,9 @@ export default function HomePage() {
       <NecoShelfEditor />
       <Icarus />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/hoover.png"
-        alt="hoover"
-        style={{
-          position: 'absolute',
-          left: -6,
-          top: 161,
-          width: 452,
-          height: 'auto',
-          pointerEvents: 'none',
-          zIndex: -1,
-        }}
-      />
+      <img className="tower-deco" src="/hoover.png" alt="hoover" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/sunny.png"
-        alt="sunny"
-        style={{
-          position: 'absolute',
-          left: 1103,
-          top: 613,
-          width: 200,
-          height: 'auto',
-          pointerEvents: 'none',
-          zIndex: -1,
-        }}
-      />
+      <img className="sunny-deco" src="/sunny.png" alt="sunny" />
     </>
   );
 }
