@@ -1009,3 +1009,28 @@ footer {
     @apply bg-background text-foreground;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   REDUCED MOTION — kill the always-running decorative
+   animations (starfield, meteors, comets, plasma, hero
+   power-on) for users who ask for it. Big CPU/GPU win.
+   ═══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .stars,
+  .meteor,
+  .avatar-comet,
+  .comet-img,
+  .plasma,
+  .hero-name {
+    animation: none !important;
+  }
+  /* Meteors/comets sit off-screen until their animation reveals them;
+     with motion off, keep them hidden rather than frozen at the edge. */
+  .meteor,
+  .avatar-comet {
+    display: none;
+  }
+  .hero-name {
+    opacity: 1;
+  }
+}

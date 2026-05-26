@@ -69,10 +69,14 @@ export default function Icarus() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
 
-    // Repos load async — re-check periodically until atlens shows up, then stop.
+    // Repos load async — re-check until atlens shows up, then stop. Give up
+    // after ~5s so we don't poll forever when atlens isn't in the data set.
+    let attempts = 0;
     const interval = window.setInterval(() => {
       if (document.querySelector('[data-repo="atlens"]')) {
         update();
+        window.clearInterval(interval);
+      } else if (++attempts >= 25) {
         window.clearInterval(interval);
       }
     }, 200);

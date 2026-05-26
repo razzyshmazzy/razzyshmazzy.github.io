@@ -1,2 +1,7 @@
 - learn ukulele
 - go to Northwood Bowmen's club
+
+- replace hoover tower with torii gate or artwork of citadel
+- make neither sunny nor hoover tower appear when smaller screen
+- add animation to sun
+- fix lag issues

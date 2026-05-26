@@ -84,7 +84,8 @@ export default function NecoWalker() {
     let phase: Phase = 'idle';
     let isAnimating = false;
     let scrollFallDone = false;
-    let rafId: number;
+    let rafId: number | null = null;
+    let disposed = false;
     let stareTimer: ReturnType<typeof setTimeout> | null = null;
     let lastCursorX = 0;
     let lastCursorY = 0;
@@ -118,55 +119,90 @@ export default function NecoWalker() {
     let gifFrames: ParsedFrame[] = [];
     let gifWidth = 0;
     let gifHeight = 0;
-    let compositeFrames: ImageData[] = [];
+    const compositeFrames: ImageData[] = [];
 
     const baseSpeed = () => (window.innerWidth + HEIGHT * 2) / (48 * 60);
     const moveSpeed = () => moveMode === 'run' ? baseSpeed() * RUN_SPEED_MULT : baseSpeed();
 
-    // Preload sticker images for smooth transitions
-    [STANDING_SRC, RUN_SRC, ...EMOTE_SRCS].forEach(src => {
-      const preload = new Image();
-      preload.src = src;
+    // Cached rendered width of the walking sprite — refreshed on load instead
+    // of being read via getBoundingClientRect() every frame (which forces a
+    // synchronous layout each tick).
+    let charWidth = HEIGHT;
+    img.addEventListener('load', () => {
+      if (phase === 'walking') {
+        const w = img.offsetWidth;
+        if (w) charWidth = w;
+      }
     });
 
-    // ── decode gif frames ──
-    fetch('/neco-falling.gif')
-      .then(r => r.arrayBuffer())
-      .then(buf => {
-        const parsed = parseGIF(buf);
-        gifFrames = decompressFrames(parsed, true);
-        gifWidth = parsed.lsd.width;
-        gifHeight = parsed.lsd.height;
+    // Run heavy, non-critical work when the browser is idle so it never
+    // competes with the initial paint.
+    const ric = (window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    }).requestIdleCallback;
+    const idle = (cb: () => void): void => {
+      if (ric) ric(cb, { timeout: 2500 });
+      else window.setTimeout(cb, 300);
+    };
 
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = gifWidth;
-        tempCanvas.height = gifHeight;
-        const tempCtx = tempCanvas.getContext('2d')!;
+    // rAF loop control — only run while something actually moves (walking /
+    // falling). Standing, emoting, staring and dragging are driven by timers
+    // and pointer events, so the loop sleeps then.
+    function startLoop() {
+      if (rafId == null) rafId = requestAnimationFrame(tick);
+    }
 
-        for (let i = 0; i < gifFrames.length; i++) {
-          const frame = gifFrames[i];
-          if (i > 0) {
-            const prev = gifFrames[i - 1];
-            if (prev.disposalType === 2) {
-              tempCtx.clearRect(prev.dims.left, prev.dims.top, prev.dims.width, prev.dims.height);
-            }
-          }
-          const frameImageData = new ImageData(
-            new Uint8ClampedArray(frame.patch),
-            frame.dims.width,
-            frame.dims.height
-          );
-          const patchCanvas = document.createElement('canvas');
-          patchCanvas.width = frame.dims.width;
-          patchCanvas.height = frame.dims.height;
-          patchCanvas.getContext('2d')!.putImageData(frameImageData, 0, 0);
-          tempCtx.drawImage(patchCanvas, frame.dims.left, frame.dims.top);
-          compositeFrames.push(tempCtx.getImageData(0, 0, gifWidth, gifHeight));
-        }
-
-        canvas.width = gifWidth;
-        canvas.height = gifHeight;
+    // Preload sticker images for smooth transitions (deferred off the critical path)
+    idle(() => {
+      if (disposed) return;
+      [STANDING_SRC, RUN_SRC, ...EMOTE_SRCS].forEach(src => {
+        const preload = new Image();
+        preload.src = src;
       });
+    });
+
+    // ── decode gif frames (deferred; only needed once she falls/drags) ──
+    idle(() => {
+      if (disposed) return;
+      fetch('/neco-falling.gif')
+        .then(r => r.arrayBuffer())
+        .then(buf => {
+          if (disposed) return;
+          const parsed = parseGIF(buf);
+          gifFrames = decompressFrames(parsed, true);
+          gifWidth = parsed.lsd.width;
+          gifHeight = parsed.lsd.height;
+
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = gifWidth;
+          tempCanvas.height = gifHeight;
+          const tempCtx = tempCanvas.getContext('2d')!;
+
+          for (let i = 0; i < gifFrames.length; i++) {
+            const frame = gifFrames[i];
+            if (i > 0) {
+              const prev = gifFrames[i - 1];
+              if (prev.disposalType === 2) {
+                tempCtx.clearRect(prev.dims.left, prev.dims.top, prev.dims.width, prev.dims.height);
+              }
+            }
+            const frameImageData = new ImageData(
+              new Uint8ClampedArray(frame.patch),
+              frame.dims.width,
+              frame.dims.height
+            );
+            const patchCanvas = document.createElement('canvas');
+            patchCanvas.width = frame.dims.width;
+            patchCanvas.height = frame.dims.height;
+            patchCanvas.getContext('2d')!.putImageData(frameImageData, 0, 0);
+            tempCtx.drawImage(patchCanvas, frame.dims.left, frame.dims.top);
+            compositeFrames.push(tempCtx.getImageData(0, 0, gifWidth, gifHeight));
+          }
+
+          canvas.width = gifWidth;
+          canvas.height = gifHeight;
+        });
+    });
 
     // ── helpers ──
     function cancelSequence() {
@@ -223,6 +259,7 @@ export default function NecoWalker() {
       walkStopAfter = randRange(WALK_MIN_MS, WALK_MAX_MS);
       phase = 'walking';
       applyImgTransform();
+      startLoop();
     }
 
     // Shelves are her ONLY landing surfaces.
@@ -341,6 +378,7 @@ export default function NecoWalker() {
       canvas.style.zIndex = String(DRAG_Z);
       drawFrame(0);
       applyCanvasTransform(fallY);
+      startLoop();
     }
 
     // ── landing ──
@@ -389,9 +427,10 @@ export default function NecoWalker() {
 
           x += moveSpeed() * direction;
 
-          // Edge detection: char center beyond shelf edge → fall
-          const charRect = img.getBoundingClientRect();
-          const charCenter = charRect.left + charRect.width / 2;
+          // Edge detection: char center beyond shelf edge → fall.
+          // The element's CSS left is 0 and X never scrolls, so its viewport
+          // left equals x — no need to read layout via getBoundingClientRect().
+          const charCenter = x + charWidth / 2;
           if (charCenter < landedSurface.left || charCenter > landedSurface.right) {
             triggerEdgeFall();
           } else {
@@ -477,7 +516,13 @@ export default function NecoWalker() {
         }
       }
 
-      rafId = requestAnimationFrame(tick);
+      // Only keep the loop alive while she's actually moving. Other phases are
+      // static until a timer or pointer event wakes things up via startLoop().
+      if (phase === 'walking' || phase === 'falling') {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+      }
     }
 
     // ── drag ──
@@ -568,6 +613,7 @@ export default function NecoWalker() {
       if (phase === 'idle' && window.scrollY >= 200) {
         walkStartTime = performance.now();
         phase = 'walking';
+        startLoop();
         return;
       }
 
@@ -584,12 +630,15 @@ export default function NecoWalker() {
     window.addEventListener('scroll', onScroll, { passive: true });
 
     canvas.style.display = 'none';
-    rafId = requestAnimationFrame(tick);
+    // Only spin up the loop if she's already walking (page loaded scrolled);
+    // otherwise it stays asleep until a scroll wakes it.
+    if (phase === 'walking') startLoop();
 
     return () => {
+      disposed = true;
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener(SHELVES_CHANGED_EVENT, onShelvesChanged);
-      cancelAnimationFrame(rafId);
+      if (rafId != null) cancelAnimationFrame(rafId);
       cancelSequence();
       img.removeEventListener('mousedown', onMouseDown);
       img.removeEventListener('touchstart', onTouchStart);
