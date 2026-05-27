@@ -1,62 +1,15 @@
 {
-  "lastUpdated": "2026-05-26T09:42:06.547Z",
+  "lastUpdated": "2026-05-27T09:35:49.467Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
-      "name": "atlens",
-      "description": "Understands a codebase",
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/atlens",
-      "homepage": null,
-      "updatedAt": "2026-05-26T04:03:09Z",
-      "topics": [],
-      "summary": {
-        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
-        "techStack": {
-          "languages": [
-            "JavaScript"
-          ],
-          "frameworks": [
-            "React 19",
-            "Express.js",
-            "Vite"
-          ],
-          "tools": [
-            "Anthropic Claude API",
-            "simple-git",
-            "Tailwind CSS",
-            "Radix UI",
-            "Lucide React"
-          ]
-        },
-        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
-        "entryPoints": [
-          "src/main.jsx",
-          "server/index.js"
-        ],
-        "keyFiles": [
-          "server/llm.js",
-          "server/repoParser.js",
-          "server/summarizer.js",
-          "src/components/RepoOverview.jsx"
-        ],
-        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
-        "openQuestions": [
-          "Could the parser use AST analysis instead of raw truncation?",
-          "Add support for private repos via GitHub token?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
-      "language": "JavaScript",
+      "language": "TypeScript",
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-05-25T09:55:53Z",
+      "updatedAt": "2026-05-27T06:39:31Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -101,6 +54,64 @@
         "openQuestions": [
           "Add a dark/light theme toggle?",
           "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "marinhacks",
+      "description": null,
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/marinhacks",
+      "homepage": null,
+      "updatedAt": "2026-05-27T06:17:29Z",
+      "topics": [],
+      "summary": null
+    },
+    {
+      "name": "atlens",
+      "description": "Understands a codebase",
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/atlens",
+      "homepage": null,
+      "updatedAt": "2026-05-26T04:03:09Z",
+      "topics": [],
+      "summary": {
+        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
+        "techStack": {
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [
+            "React 19",
+            "Express.js",
+            "Vite"
+          ],
+          "tools": [
+            "Anthropic Claude API",
+            "simple-git",
+            "Tailwind CSS",
+            "Radix UI",
+            "Lucide React"
+          ]
+        },
+        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
+        "entryPoints": [
+          "src/main.jsx",
+          "server/index.js"
+        ],
+        "keyFiles": [
+          "server/llm.js",
+          "server/repoParser.js",
+          "server/summarizer.js",
+          "src/components/RepoOverview.jsx"
+        ],
+        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
+        "openQuestions": [
+          "Could the parser use AST analysis instead of raw truncation?",
+          "Add support for private repos via GitHub token?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
@@ -181,17 +192,6 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
-    },
-    {
-      "name": "marinhacks",
-      "description": null,
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/marinhacks",
-      "homepage": null,
-      "updatedAt": "2026-04-10T02:34:02Z",
-      "topics": [],
-      "summary": null
     },
     {
       "name": "razzyshmazzy",
