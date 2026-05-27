@@ -89,22 +89,27 @@ export default function Icarus() {
     };
   }, []);
 
-  if (!place) return null;
-
+  // The image stays mounted from first render (just transparent when out of
+  // range) so the browser fetches and decodes it on page load. Otherwise a
+  // fast scroll reaches the bottom before a freshly-mounted <img> can decode,
+  // and Icarus only ever pops in at his landing spot instead of descending.
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src="/icarus.png"
       alt="icarus"
+      aria-hidden="true"
+      decoding="async"
       style={{
         position: 'fixed',
-        left: place.left,
-        top: place.top,
+        left: place ? place.left : 0,
+        top: place ? place.top : 0,
         width: WIDTH,
         height: HEIGHT,
         objectFit: 'contain',
         pointerEvents: 'none',
         zIndex: -10,
+        opacity: place ? 1 : 0,
       }}
     />
   );

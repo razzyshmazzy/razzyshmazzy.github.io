@@ -505,8 +505,14 @@ body {
   justify-content: center;
   padding: 1.5rem 2rem;
   min-height: 156px;
-  background: rgba(5,5,5,0.6);
-  backdrop-filter: blur(4px);
+  /* Static frosted panel — replaces `backdrop-filter: blur(4px)`, which had to
+     re-blur the animating starfield every frame for a softening that was almost
+     entirely hidden behind this panel and the 40%-opacity rose video on top.
+     A slightly denser translucent fill plus a faint top sheen reads the same
+     with zero per-frame compositing cost. */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 45%),
+    rgba(6,6,6,0.72);
   position: relative;
   overflow: hidden;
 }
