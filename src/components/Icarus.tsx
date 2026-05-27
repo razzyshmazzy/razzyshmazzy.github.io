@@ -31,6 +31,13 @@ export default function Icarus() {
       const atlensRect = atlens.getBoundingClientRect();
       const scrollY = window.scrollY;
 
+      // Only show Icarus if the viewport can hold him side by side with the
+      // about-me column — i.e. his width plus the about-me's width fit across.
+      if (window.innerWidth < aboutRect.width + WIDTH) {
+        setPlace(null);
+        return;
+      }
+
       const aboutMidDoc = aboutRect.top + scrollY + aboutRect.height / 2;
       const viewportBottomDoc = scrollY + window.innerHeight;
       const triggerScrollY = aboutMidDoc - window.innerHeight;

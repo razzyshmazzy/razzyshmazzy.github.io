@@ -259,17 +259,21 @@ body {
 
 /* ═══════════════════════════════════════════════════
    DECORATIVE SCENERY — tower (hoover) + sunny figure
-   Calibrated on a 1398×791 viewport, then expressed in
-   viewport units so position/size scale with the screen.
-   Horizontal uses vw (preserves image aspect); vertical
-   uses svh so they track the fold like the hero/quote.
+   Calibrated on a 1398×791 viewport, expressed in viewport
+   units so position/size scale with the screen. Horizontal +
+   size use vw (preserves image aspect). Vertically they are
+   anchored to the TOP OF THE QUOTE BOX (= 100svh, the end of
+   the 100svh hero): top = 100svh − (heightᵥᵥ − overlapᵥᵥ), so
+   each one always sits directly above the quote box.
+     tower:  height 32.33·974/609 = 51.71vw, overlap 6.65vw → 45.06vw
+     sunny:  height 14.31vw,                 overlap 1.57vw → 12.74vw
    ═══════════════════════════════════════════════════ */
 
 .tower-deco {
   position: absolute;
-  left: -0.43vw;   /* -6px / 1398 */
-  top: 20.35svh;   /* 161px / 791 */
-  width: 32.33vw;  /* 452px / 1398 */
+  left: -0.43vw;              /* -6px / 1398 */
+  top: calc(100svh - 45.06vw); /* bottom just above the quote box top */
+  width: 32.33vw;            /* 452px / 1398 */
   height: auto;
   pointer-events: none;
   z-index: -1;
@@ -277,9 +281,9 @@ body {
 
 .sunny-deco {
   position: absolute;
-  left: 78.9vw;    /* 1103px / 1398 */
-  top: 77.5svh;    /* 613px / 791 */
-  width: 14.31vw;  /* 200px / 1398 */
+  left: 78.9vw;              /* 1103px / 1398 */
+  top: calc(100svh - 12.74vw); /* bottom just above the quote box top */
+  width: 14.31vw;            /* 200px / 1398 */
   height: auto;
   pointer-events: none;
   z-index: -1;
