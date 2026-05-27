@@ -10,12 +10,16 @@ interface Quote {
 function parseQuotes(raw: string): Quote[] {
   const matches = [...raw.matchAll(/\{([\s\S]*?)\}/g)];
   return matches.map((m) => {
-    const block = m[1].trim();
-    const authorMatch = block.match(/^([\s\S]+?)\n(-[\s\S]+)$/);
-    if (authorMatch) {
-      return { text: authorMatch[1].trim(), author: authorMatch[2].trim() };
+    // The last line of each block is the author/source; everything above it is
+    // the quote body. A leading "-" on the author line is optional (older
+    // entries used it). Line breaks within the body are author-authored and
+    // preserved verbatim.
+    const lines = m[1].replace(/^\n+|\n+$/g, '').split('\n');
+    if (lines.length > 1) {
+      const author = lines.pop()!.trim().replace(/^-\s*/, '');
+      return { text: lines.join('\n'), author };
     }
-    return { text: block, author: '' };
+    return { text: lines[0]?.trim() ?? '', author: '' };
   });
 }
 

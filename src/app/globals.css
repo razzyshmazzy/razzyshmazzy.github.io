@@ -560,7 +560,8 @@ body {
   color: var(--text);
   line-height: 1.75;
   letter-spacing: 0.01em;
-  white-space: pre-line;
+  /* Honor only the author's manual line breaks — never wrap automatically. */
+  white-space: pre;
 }
 
 .quote-author {
