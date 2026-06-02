@@ -1,42 +1,7 @@
 {
-  "lastUpdated": "2026-06-01T11:20:50.141Z",
+  "lastUpdated": "2026-06-02T10:11:59.372Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "razzyshmazzy",
-      "description": "This one's for all the razzies",
-      "language": null,
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/razzyshmazzy",
-      "homepage": null,
-      "updatedAt": "2026-05-31T17:53:48Z",
-      "topics": [],
-      "summary": {
-        "purpose": "GitHub profile README — the special repository that renders on your GitHub profile page, introducing yourself and highlighting your projects.",
-        "techStack": {
-          "languages": [
-            "Markdown"
-          ],
-          "frameworks": [],
-          "tools": [
-            "GitHub Readme Stats",
-            "GitHub Actions badges"
-          ]
-        },
-        "architecture": "A single README.md file that GitHub renders as your public profile. May include dynamic content like contribution graphs, language stats, or pinned project cards.",
-        "entryPoints": [
-          "README.md"
-        ],
-        "keyFiles": [
-          "README.md"
-        ],
-        "setup": "Edit README.md — GitHub renders it automatically on your profile",
-        "openQuestions": [
-          "Does it include dynamic stats badges?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -44,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-05-31T08:38:04Z",
+      "updatedAt": "2026-06-01T11:20:56Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -89,6 +54,41 @@
         "openQuestions": [
           "Add a dark/light theme toggle?",
           "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "razzyshmazzy",
+      "description": "This one's for all the razzies",
+      "language": null,
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/razzyshmazzy",
+      "homepage": null,
+      "updatedAt": "2026-05-31T17:53:48Z",
+      "topics": [],
+      "summary": {
+        "purpose": "GitHub profile README — the special repository that renders on your GitHub profile page, introducing yourself and highlighting your projects.",
+        "techStack": {
+          "languages": [
+            "Markdown"
+          ],
+          "frameworks": [],
+          "tools": [
+            "GitHub Readme Stats",
+            "GitHub Actions badges"
+          ]
+        },
+        "architecture": "A single README.md file that GitHub renders as your public profile. May include dynamic content like contribution graphs, language stats, or pinned project cards.",
+        "entryPoints": [
+          "README.md"
+        ],
+        "keyFiles": [
+          "README.md"
+        ],
+        "setup": "Edit README.md — GitHub renders it automatically on your profile",
+        "openQuestions": [
+          "Does it include dynamic stats badges?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
