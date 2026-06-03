@@ -1,7 +1,18 @@
 {
-  "lastUpdated": "2026-06-02T10:11:59.372Z",
+  "lastUpdated": "2026-06-03T10:48:36.907Z",
   "owner": "razzyshmazzy",
   "repos": [
+    {
+      "name": "marinhacks",
+      "description": null,
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/marinhacks",
+      "homepage": null,
+      "updatedAt": "2026-06-02T21:06:38Z",
+      "topics": [],
+      "summary": null
+    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -9,7 +20,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-01T11:20:56Z",
+      "updatedAt": "2026-06-02T10:12:04Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -92,17 +103,6 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
-    },
-    {
-      "name": "marinhacks",
-      "description": null,
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/marinhacks",
-      "homepage": null,
-      "updatedAt": "2026-05-27T06:17:29Z",
-      "topics": [],
-      "summary": null
     },
     {
       "name": "atlens",
