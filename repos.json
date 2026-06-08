@@ -1,18 +1,7 @@
 {
-  "lastUpdated": "2026-06-07T08:48:26.804Z",
+  "lastUpdated": "2026-06-08T10:25:24.412Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "frontend-heaven-sigma-psychosis",
-      "description": "aw lawd paige frontend",
-      "language": "TypeScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/frontend-heaven-sigma-psychosis",
-      "homepage": null,
-      "updatedAt": "2026-06-07T08:42:41Z",
-      "topics": [],
-      "summary": null
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -20,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-06T08:27:27Z",
+      "updatedAt": "2026-06-07T08:48:31Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +57,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "frontend-heaven-sigma-psychosis",
+      "description": "aw lawd paige frontend",
+      "language": "TypeScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/frontend-heaven-sigma-psychosis",
+      "homepage": null,
+      "updatedAt": "2026-06-07T08:42:41Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "marinhacks",
