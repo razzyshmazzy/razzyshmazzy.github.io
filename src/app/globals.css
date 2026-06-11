@@ -559,8 +559,12 @@ body {
   color: var(--text);
   line-height: 1.75;
   letter-spacing: 0.01em;
-  /* Honor only the author's manual line breaks — never wrap automatically. */
-  white-space: pre;
+  /* Honor the author's manual line breaks, but also wrap at word boundaries so
+     long quotes stay on-screen (notably on phones) instead of running off the
+     right edge. `overflow-wrap` is the safety net for any single token longer
+     than the column. */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .quote-author {
