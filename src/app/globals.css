@@ -289,17 +289,12 @@ body {
   z-index: -1;
 }
 
-/* Phone: drop the tower, tuck sunny beneath the "razzyshmazzy" name */
+/* Phone: drop the tower, sunny, and the sun-orb — scenery is desktop-only */
 @media (max-width: 600px) {
-  .tower-deco {
+  .tower-deco,
+  .sunny-deco,
+  .sun-orb {
     display: none;
-  }
-
-  .sunny-deco {
-    left: 50%;
-    transform: translateX(-50%);
-    top: 56svh;    /* just below the vertically-centered hero name */
-    width: 45vw;
   }
 }
 
