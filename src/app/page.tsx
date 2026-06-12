@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Hero from '@/components/Hero';
 import NecoWalker from '@/components/NecoWalker';
-import NecoShelfEditor from '@/components/NecoShelfEditor';
 import Icarus from '@/components/Icarus';
 import QuoteDivider from '@/components/QuoteDivider';
 import RepoGrid from '@/components/RepoGrid';
@@ -61,10 +60,9 @@ export default function HomePage() {
       </div>
 
       <AboutMe />
-      <NecoShelfEditor />
       <Icarus />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="tower-deco" src="/hoover.png" alt="hoover" />
+      {/* The hoover tower (.tower-deco / public/hoover.png) is intentionally not
+          rendered — kept in the codebase/assets for possible future return. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="sunny-deco" src="/sunny.png" alt="sunny" />
     </>

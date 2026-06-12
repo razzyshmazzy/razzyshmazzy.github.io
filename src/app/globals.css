@@ -483,14 +483,14 @@ body {
 
 .neco-walker {
   position: absolute;
+  /* Fallback line; JS measures the real .quote-divider top and sets `top`. */
   top: calc(100svh - 96px);
   left: 0;
   image-rendering: pixelated;
   height: 96px;
   width: auto;
   z-index: 3;
-  pointer-events: auto;
-  cursor: grab;
+  pointer-events: none;
   will-change: transform;
 }
 

@@ -1,24 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { parseGIF, decompressFrames } from 'gifuct-js';
-import type { ParsedFrame } from 'gifuct-js';
-import {
-  loadShelves,
-  SHELVES_CHANGED_EVENT,
-  type Shelf,
-} from '@/lib/shelves';
-
-type Surface = { y: number; left: number; right: number };
 
 const HEIGHT = 96;
-const FALL_HEIGHT = 300;
-const STARE_MS = 3000;
-const DRAG_Z = 9999;
-const NORMAL_Z = 3;
-const MIN_FALL_DURATION = 200;
-const G_PX_PER_MS2 = 0.002;
-const RESCAN_INTERVAL = 5;
 
 const WALK_MIN_MS = 5000;
 const WALK_MAX_MS = 12000;
@@ -29,6 +13,7 @@ const EMOTE_MIN_COUNT = 1;
 const EMOTE_MAX_COUNT = 3;
 const RUN_SPEED_MULT = 2.2;
 
+const WALK_SRC = '/neco-walk.gif';
 const STANDING_SRC = '/neco-stickers/neco-standing.webp';
 const RUN_SRC = '/neco-stickers/neco-run.webp';
 
@@ -58,167 +43,64 @@ function randInt(min: number, max: number) {
 
 export default function NecoWalker() {
   const imgRef = useRef<HTMLImageElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!imgRef.current || !canvasRef.current) return;
+    if (!imgRef.current) return;
     const img: HTMLImageElement = imgRef.current;
-    const canvas: HTMLCanvasElement = canvasRef.current;
-    const ctx = canvas.getContext('2d')!;
 
-    const basePageY = img.getBoundingClientRect().top + window.scrollY;
-
-    // ── shelves (only landing surfaces) ──
-    let currentShelves: Shelf[] = loadShelves();
-    const onShelvesChanged = (e: Event) => {
-      const detail = (e as CustomEvent<Shelf[]>).detail;
-      if (Array.isArray(detail)) currentShelves = detail;
-    };
-    window.addEventListener(SHELVES_CHANGED_EVENT, onShelvesChanged);
+    // ── her walking line = the quote divider's top border ──
+    // Measured so her feet rest exactly on it (and stay there if the layout
+    // reflows on resize). Both this element and .quote-divider share the same
+    // positioned ancestor, so offsetTop is in the same coordinate space.
+    function measureLine() {
+      const divider = document.querySelector('.quote-divider') as HTMLElement | null;
+      const top = divider ? divider.offsetTop : window.innerHeight;
+      img.style.top = `${top - HEIGHT}px`;
+    }
+    measureLine();
 
     // ── state ──
     let x = -HEIGHT;
-    let fallY = 0;
     let direction = 1;
-    type Phase = 'idle' | 'walking' | 'standing' | 'emoting' | 'falling' | 'staring' | 'dragging';
-    let phase: Phase = 'idle';
-    let isAnimating = false;
-    let scrollFallDone = false;
+    type Phase = 'walking' | 'standing' | 'emoting';
+    let phase: Phase = 'walking';
     let rafId: number | null = null;
-    let disposed = false;
-    let stareTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastCursorX = 0;
-    let lastCursorY = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
 
-    // idle sequence state
-    let walkStartTime = 0;
+    let walkStartTime = performance.now();
     let walkStopAfter = randRange(WALK_MIN_MS, WALK_MAX_MS);
     let moveMode: 'walk' | 'run' = 'walk';
     let emotesRemaining = 0;
     let lastEmoteIndex = -1;
 
-    // drag state
-    let grabOffsetX = 0;
-    let grabOffsetY = 0;
-
-    // fall animation state
-    let fallStartY = 0;
-    let fallDistance = 0;
-    // Feet are always at canvas-bottom (basePageY + fallY + FALL_HEIGHT).
-    const SNAP_THRESHOLD = 5;
-    let fallDuration = 0;
-    let fallStartTime = 0;
-    let fallFrameOffset = 0;
-    let rescanCounter = 0;
-
-    // surface tracking
-    let targetSurface: Surface | null = null;
-    let landedSurface: Surface | null = null;
-
-    // gif frame data
-    let gifFrames: ParsedFrame[] = [];
-    let gifWidth = 0;
-    let gifHeight = 0;
-    const compositeFrames: ImageData[] = [];
-
     const baseSpeed = () => (window.innerWidth + HEIGHT * 2) / (48 * 60);
-    const moveSpeed = () => moveMode === 'run' ? baseSpeed() * RUN_SPEED_MULT : baseSpeed();
+    const moveSpeed = () => (moveMode === 'run' ? baseSpeed() * RUN_SPEED_MULT : baseSpeed());
 
-    // Cached rendered width of the walking sprite — refreshed on load instead
-    // of being read via getBoundingClientRect() every frame (which forces a
-    // synchronous layout each tick).
-    let charWidth = HEIGHT;
-    img.addEventListener('load', () => {
-      if (phase === 'walking') {
-        const w = img.offsetWidth;
-        if (w) charWidth = w;
-      }
-    });
-
-    // Run heavy, non-critical work when the browser is idle so it never
-    // competes with the initial paint.
-    const ric = (window as Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-    }).requestIdleCallback;
-    const idle = (cb: () => void): void => {
-      if (ric) ric(cb, { timeout: 2500 });
-      else window.setTimeout(cb, 300);
-    };
-
-    // rAF loop control — only run while something actually moves (walking /
-    // falling). Standing, emoting, staring and dragging are driven by timers
-    // and pointer events, so the loop sleeps then.
-    function startLoop() {
-      if (rafId == null) rafId = requestAnimationFrame(tick);
+    function applyTransform() {
+      const scaleX = direction === -1 ? -1 : 1;
+      img.style.transform = `translateX(${x}px) scaleX(${scaleX})`;
     }
 
-    // Preload sticker images for smooth transitions (deferred off the critical path)
-    idle(() => {
-      if (disposed) return;
-      [STANDING_SRC, RUN_SRC, ...EMOTE_SRCS].forEach(src => {
-        const preload = new Image();
-        preload.src = src;
-      });
+    // Preload sticker images so emote/run transitions don't pop.
+    [STANDING_SRC, RUN_SRC, ...EMOTE_SRCS].forEach((src) => {
+      const preload = new Image();
+      preload.src = src;
     });
 
-    // ── decode gif frames (deferred; only needed once she falls/drags) ──
-    idle(() => {
-      if (disposed) return;
-      fetch('/neco-falling.gif')
-        .then(r => r.arrayBuffer())
-        .then(buf => {
-          if (disposed) return;
-          const parsed = parseGIF(buf);
-          gifFrames = decompressFrames(parsed, true);
-          gifWidth = parsed.lsd.width;
-          gifHeight = parsed.lsd.height;
-
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = gifWidth;
-          tempCanvas.height = gifHeight;
-          const tempCtx = tempCanvas.getContext('2d')!;
-
-          for (let i = 0; i < gifFrames.length; i++) {
-            const frame = gifFrames[i];
-            if (i > 0) {
-              const prev = gifFrames[i - 1];
-              if (prev.disposalType === 2) {
-                tempCtx.clearRect(prev.dims.left, prev.dims.top, prev.dims.width, prev.dims.height);
-              }
-            }
-            const frameImageData = new ImageData(
-              new Uint8ClampedArray(frame.patch),
-              frame.dims.width,
-              frame.dims.height
-            );
-            const patchCanvas = document.createElement('canvas');
-            patchCanvas.width = frame.dims.width;
-            patchCanvas.height = frame.dims.height;
-            patchCanvas.getContext('2d')!.putImageData(frameImageData, 0, 0);
-            tempCtx.drawImage(patchCanvas, frame.dims.left, frame.dims.top);
-            compositeFrames.push(tempCtx.getImageData(0, 0, gifWidth, gifHeight));
-          }
-
-          canvas.width = gifWidth;
-          canvas.height = gifHeight;
-        });
-    });
-
-    // ── helpers ──
-    function cancelSequence() {
-      if (stareTimer) { clearTimeout(stareTimer); stareTimer = null; }
-      isAnimating = false;
+    // rAF loop runs only while she's walking; standing/emoting are timer-driven.
+    function startLoop() {
+      if (rafId == null) rafId = requestAnimationFrame(tick);
     }
 
     function startIdleSequence() {
       phase = 'standing';
       img.src = STANDING_SRC;
-      applyImgTransform();
+      applyTransform();
 
       emotesRemaining = randInt(EMOTE_MIN_COUNT, EMOTE_MAX_COUNT);
       lastEmoteIndex = -1;
 
-      stareTimer = setTimeout(doNextEmote, randRange(STAND_PAUSE_MIN_MS, STAND_PAUSE_MAX_MS));
+      timer = setTimeout(doNextEmote, randRange(STAND_PAUSE_MIN_MS, STAND_PAUSE_MAX_MS));
     }
 
     function doNextEmote() {
@@ -235,16 +117,16 @@ export default function NecoWalker() {
 
       phase = 'emoting';
       img.src = EMOTE_SRCS[idx];
-      applyImgTransform();
+      applyTransform();
       emotesRemaining--;
 
-      stareTimer = setTimeout(() => {
+      timer = setTimeout(() => {
         if (emotesRemaining > 0) {
           // Brief standing pause between emotes
           phase = 'standing';
           img.src = STANDING_SRC;
-          applyImgTransform();
-          stareTimer = setTimeout(doNextEmote, randRange(500, 1200));
+          applyTransform();
+          timer = setTimeout(doNextEmote, randRange(500, 1200));
         } else {
           resumeMoving();
         }
@@ -254,420 +136,63 @@ export default function NecoWalker() {
     function resumeMoving() {
       direction = Math.random() < 0.5 ? -1 : 1;
       moveMode = Math.random() < 0.35 ? 'run' : 'walk';
-      img.src = moveMode === 'run' ? RUN_SRC : '/neco-walk.gif';
+      img.src = moveMode === 'run' ? RUN_SRC : WALK_SRC;
       walkStartTime = performance.now();
       walkStopAfter = randRange(WALK_MIN_MS, WALK_MAX_MS);
       phase = 'walking';
-      applyImgTransform();
+      applyTransform();
       startLoop();
     }
 
-    // Shelves are her ONLY landing surfaces.
-    // Returns the closest shelf below (or at, when inclusive) the char that
-    // horizontally overlaps the char's footprint, or null.
-    // Drops use inclusive=true (cursor exactly on a shelf y still counts).
-    // Edge falls use inclusive=false (the shelf she just left must be excluded).
-    function findNearestSurface(
-      referenceY: number,
-      charLeft: number,
-      charRight: number,
-      inclusive = false
-    ): Surface | null {
-      let nearest: Surface | null = null;
-      for (const shelf of currentShelves) {
-        if (inclusive ? shelf.y < referenceY : shelf.y <= referenceY) continue;
-        if (shelf.x2 <= charLeft || shelf.x1 >= charRight) continue;
-        if (nearest !== null && shelf.y >= nearest.y) continue;
-        nearest = { y: shelf.y, left: shelf.x1, right: shelf.x2 };
-      }
-      return nearest;
-    }
-
-    function showImg() {
-      img.style.display = '';
-      img.style.pointerEvents = '';
-      canvas.style.display = 'none';
-    }
-
-    function showCanvas() {
-      img.style.display = 'none';
-      canvas.style.display = '';
-    }
-
-    function drawFrame(index: number) {
-      if (compositeFrames.length === 0) return;
-      const clamped = Math.max(0, Math.min(index, compositeFrames.length - 1));
-      ctx.putImageData(compositeFrames[clamped], 0, 0);
-    }
-
-    function applyCanvasTransform(posY: number) {
-      const scaleX = direction === -1 ? -1 : 1;
-      canvas.style.transform =
-        `translateX(${x}px) translateY(${posY}px) scaleX(${scaleX})`;
-    }
-
-    function applyImgTransform() {
-      const scaleX = direction === -1 ? -1 : 1;
-      img.style.height = `${HEIGHT}px`;
-      img.style.transform =
-        `translateX(${x}px) translateY(${fallY}px) scaleX(${scaleX})`;
-    }
-
-    function getCharDisplayWidth(): number {
-      return gifWidth > 0 ? (FALL_HEIGHT / gifHeight) * gifWidth : FALL_HEIGHT;
-    }
-
-    // ── unified fall function (shared by drag-drop and scroll-trigger) ──
-    function beginFall(cursorX: number | null) {
-      const fromDrop = cursorX !== null;
-      const displayWidth = getCharDisplayWidth();
-
-      // For drops: search reference = cursor Y (the user's release point).
-      // For edge/scroll: search reference = canvas-bottom (pre-aligned by caller).
-      // Canvas position is NOT changed — fallStartY = current fallY in both cases.
-      const canvasBottomPageY = basePageY + fallY + FALL_HEIGHT;
-      const searchRefY = fromDrop
-        ? lastCursorY + window.scrollY
-        : canvasBottomPageY;
-
-      if (fromDrop) {
-        x = cursorX! - displayWidth / 2;
-      }
-
-      const charLeft = x;
-      const charRight = x + displayWidth;
-
-      const surface = findNearestSurface(searchRefY, charLeft, charRight, fromDrop);
-
-      if (!surface) {
-        targetSurface = null;
-        landedSurface = null;
-        fallY = canvasBottomPageY - basePageY - HEIGHT;
-        showImg();
-        img.style.zIndex = String(NORMAL_Z);
-        isAnimating = false;
-        resumeMoving();
-        return;
-      }
-
-      targetSurface = surface;
-      fallStartY = fallY;
-      // Canvas-bottom travels from its current position to the shelf.
-      fallDistance = surface.y - canvasBottomPageY;
-
-      // Snap when cursor is within SNAP_THRESHOLD of the shelf, OR when
-      // canvas-bottom is already at or past the shelf (fallDistance <= 0 would
-      // make fallDuration NaN and crash the animation).
-      if (surface.y - searchRefY < SNAP_THRESHOLD || fallDistance <= 0) {
-        fallY = surface.y - basePageY - FALL_HEIGHT;
-        land();
-        return;
-      }
-
-      fallDuration = Math.max(MIN_FALL_DURATION, Math.sqrt(2 * fallDistance / G_PX_PER_MS2));
-      fallStartTime = performance.now();
-      fallFrameOffset = 0;
-      rescanCounter = 0;
-
-      phase = 'falling';
-      isAnimating = true;
-      landedSurface = null;
-      showCanvas();
-      canvas.style.height = `${FALL_HEIGHT}px`;
-      canvas.style.width = 'auto';
-      canvas.style.zIndex = String(DRAG_Z);
-      drawFrame(0);
-      applyCanvasTransform(fallY);
-      startLoop();
-    }
-
-    // ── landing ──
-    function land() {
-      phase = 'staring';
-      landedSurface = targetSurface;
-      targetSurface = null;
-
-      // Adjust fallY so img bottom aligns with surface top
-      if (landedSurface) {
-        fallY = landedSurface.y - basePageY - HEIGHT;
-      }
-
-      showImg();
-      img.src = '/neco-stare.png';
-      img.style.height = `${HEIGHT}px`;
-      img.style.zIndex = String(NORMAL_Z);
-      applyImgTransform();
-
-      stareTimer = setTimeout(() => {
-        isAnimating = false;
-        resumeMoving();
-      }, STARE_MS);
-    }
-
-    // ── edge fall (walk off surface edge → fall to next surface) ──
-    function triggerEdgeFall() {
-      cancelSequence();
-
-      // Adjust fallY from img HEIGHT to canvas FALL_HEIGHT, keeping bottom at surface top
-      if (landedSurface) {
-        fallY = landedSurface.y - basePageY - FALL_HEIGHT;
-      }
-      landedSurface = null;
-
-      beginFall(null);
-    }
-
-    // ── render loop ──
     function tick() {
-      // ── walking phase ──
       if (phase === 'walking') {
-        if (landedSurface) {
-          // Walk on landed shelf — y is fixed page-coord
-          fallY = landedSurface.y - basePageY - HEIGHT;
+        x += moveSpeed() * direction;
+        if (direction === 1 && x > window.innerWidth + HEIGHT) x = -HEIGHT;
+        if (direction === -1 && x < -HEIGHT) x = window.innerWidth + HEIGHT;
+        applyTransform();
 
-          x += moveSpeed() * direction;
-
-          // Edge detection: char center beyond shelf edge → fall.
-          // The element's CSS left is 0 and X never scrolls, so its viewport
-          // left equals x — no need to read layout via getBoundingClientRect().
-          const charCenter = x + charWidth / 2;
-          if (charCenter < landedSurface.left || charCenter > landedSurface.right) {
-            triggerEdgeFall();
-          } else {
-            applyImgTransform();
-          }
-        } else {
-          // No surface — walk across full viewport (pre-fall)
-          x += moveSpeed() * direction;
-          if (direction === 1 && x > window.innerWidth + HEIGHT) x = -HEIGHT;
-          if (direction === -1 && x < -HEIGHT) x = window.innerWidth + HEIGHT;
-          applyImgTransform();
-        }
-
-        // Random idle stop — only when on-screen
-        if (phase === 'walking' && x > 0 && x < window.innerWidth &&
-            performance.now() - walkStartTime > walkStopAfter) {
+        // Random idle stop — only when fully on-screen
+        if (
+          x > 0 &&
+          x < window.innerWidth &&
+          performance.now() - walkStartTime > walkStopAfter
+        ) {
           startIdleSequence();
         }
       }
 
-      // ── standing / emoting — anchor to shelf Y ──
-      if ((phase === 'standing' || phase === 'emoting') && landedSurface) {
-        fallY = landedSurface.y - basePageY - HEIGHT;
-        applyImgTransform();
-      }
-
-      // ── falling phase ──
-      if (phase === 'falling' && compositeFrames.length > 0) {
-        const elapsed = performance.now() - fallStartTime;
-        const tNorm = Math.min(elapsed / fallDuration, 1);
-        const posProgress = tNorm * tNorm; // quadratic ease-in
-
-        fallY = fallStartY + posProgress * fallDistance;
-        applyCanvasTransform(fallY);
-
-        // Map progress to frame index (offset preserves continuity after rescan)
-        const totalFrames = compositeFrames.length - 1;
-        const remainingFrames = totalFrames - fallFrameOffset;
-        const frameIndex = fallFrameOffset + Math.floor(posProgress * remainingFrames);
-        drawFrame(frameIndex);
-
-        // Live collision check — feet = canvas bottom
-        const feetPageY = basePageY + fallY + FALL_HEIGHT;
-        const surfacePageY = targetSurface ? targetSurface.y : Infinity;
-
-        if (feetPageY >= surfacePageY) {
-          // Canvas bottom reached shelf — final frame, then land
-          fallY = surfacePageY - basePageY - FALL_HEIGHT;
-          applyCanvasTransform(fallY);
-          drawFrame(totalFrames);
-          land();
-        } else if (posProgress >= 1) {
-          // Time expired — snap to target shelf
-          fallY = surfacePageY === Infinity ? fallStartY + fallDistance : surfacePageY - basePageY - FALL_HEIGHT;
-          applyCanvasTransform(fallY);
-          drawFrame(totalFrames);
-          land();
-        } else {
-          // Lightweight re-scan for closer shelves
-          rescanCounter++;
-          if (rescanCounter >= RESCAN_INTERVAL) {
-            rescanCounter = 0;
-            const displayWidth = getCharDisplayWidth();
-            const surface = findNearestSurface(feetPageY, x, x + displayWidth);
-
-            if (surface && surface.y < surfacePageY) {
-              // Closer shelf found — remap remaining fall
-              const currentFrame = Math.min(
-                fallFrameOffset + Math.floor(posProgress * remainingFrames),
-                totalFrames - 1
-              );
-              fallFrameOffset = currentFrame;
-              fallStartY = fallY;
-              fallStartTime = performance.now();
-              fallDistance = surface.y - feetPageY;
-              fallDuration = Math.max(
-                MIN_FALL_DURATION,
-                Math.sqrt(2 * fallDistance / G_PX_PER_MS2)
-              );
-              targetSurface = surface;
-            }
-          }
-        }
-      }
-
-      // Only keep the loop alive while she's actually moving. Other phases are
-      // static until a timer or pointer event wakes things up via startLoop().
-      if (phase === 'walking' || phase === 'falling') {
+      // Keep the loop alive only while she's walking.
+      if (phase === 'walking') {
         rafId = requestAnimationFrame(tick);
       } else {
         rafId = null;
       }
     }
 
-    // ── drag ──
-    function startDrag(clientX: number, clientY: number) {
-      cancelSequence();
-      phase = 'dragging';
-      landedSurface = null;
-
-      const r = img.style.display === 'none'
-        ? canvas.getBoundingClientRect()
-        : img.getBoundingClientRect();
-      grabOffsetX = clientX - r.left;
-      grabOffsetY = clientY - r.top;
-      lastCursorX = clientX;
-
-      showCanvas();
-      canvas.style.height = `${FALL_HEIGHT}px`;
-      canvas.style.width = 'auto';
-      canvas.style.zIndex = String(DRAG_Z);
-      drawFrame(0);
-
-      img.style.pointerEvents = 'none';
-
-      // Apply initial canvas position immediately (before any mousemove)
-      moveDrag(clientX, clientY);
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      document.addEventListener('touchmove', onTouchMove, { passive: false });
-      document.addEventListener('touchend', onTouchEnd);
+    function onResize() {
+      measureLine();
     }
+    window.addEventListener('resize', onResize);
 
-    function moveDrag(clientX: number, clientY: number) {
-      lastCursorX = clientX;
-      lastCursorY = clientY;
-      x = clientX - grabOffsetX;
-      fallY = clientY - grabOffsetY + window.scrollY - basePageY;
-      applyCanvasTransform(fallY);
-    }
-
-    function endDrag() {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('touchmove', onTouchMove);
-      document.removeEventListener('touchend', onTouchEnd);
-
-      // fallY left as-is — fall starts visually from where she was held.
-      beginFall(lastCursorX);
-    }
-
-    // ── event handlers ──
-    function onMouseDown(e: MouseEvent) {
-      e.preventDefault();
-      startDrag(e.clientX, e.clientY);
-    }
-    function onMouseMove(e: MouseEvent) {
-      moveDrag(e.clientX, e.clientY);
-    }
-    function onMouseUp() {
-      endDrag();
-    }
-    function onTouchStart(e: TouchEvent) {
-      if (e.touches.length !== 1) return;
-      e.preventDefault();
-      startDrag(e.touches[0].clientX, e.touches[0].clientY);
-    }
-    function onTouchMove(e: TouchEvent) {
-      if (e.touches.length !== 1) return;
-      e.preventDefault();
-      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
-    }
-    function onTouchEnd() {
-      endDrag();
-    }
-
-    img.addEventListener('mousedown', onMouseDown);
-    img.addEventListener('touchstart', onTouchStart, { passive: false });
-    canvas.addEventListener('mousedown', onMouseDown);
-    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
-
-    // ── scroll handling ──
-    if (window.scrollY >= 200) {
-      walkStartTime = performance.now();
-      phase = 'walking';
-    }
-
-    function onScroll() {
-      if (phase === 'idle' && window.scrollY >= 200) {
-        walkStartTime = performance.now();
-        phase = 'walking';
-        startLoop();
-        return;
-      }
-
-      if (phase === 'walking' && !isAnimating && !scrollFallDone && x > 0) {
-        if (window.scrollY >= basePageY) {
-          scrollFallDone = true;
-          // Adjust fallY from img HEIGHT to canvas FALL_HEIGHT (keep bottom aligned)
-          fallY = fallY + HEIGHT - FALL_HEIGHT;
-          beginFall(null);
-        }
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    canvas.style.display = 'none';
-    // Only spin up the loop if she's already walking (page loaded scrolled);
-    // otherwise it stays asleep until a scroll wakes it.
-    if (phase === 'walking') startLoop();
+    applyTransform();
+    startLoop();
 
     return () => {
-      disposed = true;
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener(SHELVES_CHANGED_EVENT, onShelvesChanged);
+      window.removeEventListener('resize', onResize);
       if (rafId != null) cancelAnimationFrame(rafId);
-      cancelSequence();
-      img.removeEventListener('mousedown', onMouseDown);
-      img.removeEventListener('touchstart', onTouchStart);
-      canvas.removeEventListener('mousedown', onMouseDown);
-      canvas.removeEventListener('touchstart', onTouchStart);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('touchmove', onTouchMove);
-      document.removeEventListener('touchend', onTouchEnd);
+      if (timer) clearTimeout(timer);
     };
   }, []);
 
   return (
-    <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
-        src="/neco-walk.gif"
-        alt=""
-        aria-hidden="true"
-        className="neco-walker"
-        style={{ transform: 'translateX(-96px)' }}
-      />
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="neco-walker"
-        style={{ display: 'none', imageRendering: 'pixelated' }}
-      />
-    </>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={imgRef}
+      src={WALK_SRC}
+      alt=""
+      aria-hidden="true"
+      className="neco-walker"
+      style={{ transform: 'translateX(-96px)' }}
+    />
   );
 }
