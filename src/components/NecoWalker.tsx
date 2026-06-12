@@ -60,7 +60,8 @@ export default function NecoWalker() {
     measureLine();
 
     // ── state ──
-    let x = -HEIGHT;
+    // Start ~20% in from the left edge rather than off-screen.
+    let x = window.innerWidth * 0.2;
     let direction = 1;
     type Phase = 'walking' | 'standing' | 'emoting';
     let phase: Phase = 'walking';
