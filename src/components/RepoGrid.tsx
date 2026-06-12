@@ -15,6 +15,7 @@ const HREF_OVERRIDES: Record<string, string> = {
 
 const IMAGE_OVERRIDES: Record<string, string> = {
   library: '/screenshots/library.png',
+  atlens: '/screenshots/atlens.png',
 };
 
 function RepoCard({ repo }: { repo: Repo }) {

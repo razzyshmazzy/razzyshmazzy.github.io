@@ -65,6 +65,8 @@ export default function HomePage() {
           rendered — kept in the codebase/assets for possible future return. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="sunny-deco" src="/sunny.png" alt="sunny" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="torii-deco" src="/torii-gate.png" alt="torii gate" />
     </>
   );
 }

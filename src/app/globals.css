@@ -279,20 +279,41 @@ body {
   z-index: -1;
 }
 
+/* Sunny + torii: `left` is a percent of viewport width (quote-independent), but
+   `top` MUST anchor to 100svh — the hero bottom, i.e. the quote box's TOP edge,
+   which never moves no matter how tall the quote grows. A percent `top` resolves
+   against total PAGE height, which grows with the quote, so it drifts per quote.
+   This matches how NecoWalker pins itself to the quote-divider top. */
 .sunny-deco {
   position: absolute;
-  left: 78.9vw;              /* 1103px / 1398 */
-  top: calc(100svh - 12.74vw); /* bottom just above the quote box top */
+  left: 78.9%;
+  top: calc(100svh - 12.74vw);  /* 178px above the quote box top @1398w */
   width: 14.31vw;            /* 200px / 1398 */
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+  /* Very slight cool-white haze hugging her silhouette — the diffuse glow of a
+     moonlit shadow. drop-shadow traces the PNG alpha, not a box. */
+  filter:
+    drop-shadow(0 0 8px rgba(210, 225, 255, 0.15))
+    drop-shadow(0 0 22px rgba(180, 200, 255, 0.08));
+}
+
+.torii-deco {
+  position: absolute;
+  left: 5.7%;
+  top: calc(100svh - 19.81vw);  /* 277px above the quote box top @1398w */
+  width: 22vw;
   height: auto;
   pointer-events: none;
   z-index: -1;
 }
 
-/* Phone: drop the tower, sunny, and the sun-orb — scenery is desktop-only */
+/* Phone: drop the scenery — it's desktop-only. */
 @media (max-width: 600px) {
   .tower-deco,
   .sunny-deco,
+  .torii-deco,
   .sun-orb {
     display: none;
   }
