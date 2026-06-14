@@ -1,7 +1,18 @@
 {
-  "lastUpdated": "2026-06-13T08:50:42.112Z",
+  "lastUpdated": "2026-06-14T09:24:36.913Z",
   "owner": "razzyshmazzy",
   "repos": [
+    {
+      "name": "aquaagent",
+      "description": "See how much water your prompts use, and reduce it.",
+      "language": "HTML",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/aquaagent",
+      "homepage": "https://aquaagent-eight.vercel.app",
+      "updatedAt": "2026-06-14T02:24:08Z",
+      "topics": [],
+      "summary": null
+    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -9,7 +20,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-12T22:42:54Z",
+      "updatedAt": "2026-06-13T08:50:46Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
