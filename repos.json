@@ -1,64 +1,17 @@
 {
-  "lastUpdated": "2026-06-16T11:00:48.563Z",
+  "lastUpdated": "2026-06-17T10:44:41.579Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
       "name": "cipher",
       "description": "Checks every known cipher variation",
-      "language": null,
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/cipher",
-      "homepage": null,
-      "updatedAt": "2026-06-16T07:58:24Z",
-      "topics": [],
-      "summary": null
-    },
-    {
-      "name": "atlens",
-      "description": "Understands a codebase",
       "language": "JavaScript",
       "stars": 0,
-      "url": "https://github.com/razzyshmazzy/atlens",
-      "homepage": null,
-      "updatedAt": "2026-06-16T06:21:43Z",
+      "url": "https://github.com/razzyshmazzy/cipher",
+      "homepage": "https://cipher-solver.vercel.app",
+      "updatedAt": "2026-06-17T08:35:33Z",
       "topics": [],
-      "summary": {
-        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
-        "techStack": {
-          "languages": [
-            "JavaScript"
-          ],
-          "frameworks": [
-            "React 19",
-            "Express.js",
-            "Vite"
-          ],
-          "tools": [
-            "Anthropic Claude API",
-            "simple-git",
-            "Tailwind CSS",
-            "Radix UI",
-            "Lucide React"
-          ]
-        },
-        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
-        "entryPoints": [
-          "src/main.jsx",
-          "server/index.js"
-        ],
-        "keyFiles": [
-          "server/llm.js",
-          "server/repoParser.js",
-          "server/summarizer.js",
-          "src/components/RepoOverview.jsx"
-        ],
-        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
-        "openQuestions": [
-          "Could the parser use AST analysis instead of raw truncation?",
-          "Add support for private repos via GitHub token?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
+      "summary": null
     },
     {
       "name": "razzyshmazzy.github.io",
@@ -67,7 +20,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-15T22:52:55Z",
+      "updatedAt": "2026-06-16T11:00:54Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -112,6 +65,53 @@
         "openQuestions": [
           "Add a dark/light theme toggle?",
           "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "atlens",
+      "description": "Understands a codebase",
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/atlens",
+      "homepage": null,
+      "updatedAt": "2026-06-16T06:21:43Z",
+      "topics": [],
+      "summary": {
+        "purpose": "AI-powered codebase analyzer that clones a GitHub repo, summarizes its files, and uses Claude to explain its architecture, tech stack, and entry points.",
+        "techStack": {
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [
+            "React 19",
+            "Express.js",
+            "Vite"
+          ],
+          "tools": [
+            "Anthropic Claude API",
+            "simple-git",
+            "Tailwind CSS",
+            "Radix UI",
+            "Lucide React"
+          ]
+        },
+        "architecture": "Full-stack app with a React frontend and an Express backend. The backend runs a 5-step pipeline: clone repo → parse & filter files → truncate to fit LLM context → send to Claude Haiku → return structured JSON. The frontend renders results in an 8-card bento grid with an interactive file tree.",
+        "entryPoints": [
+          "src/main.jsx",
+          "server/index.js"
+        ],
+        "keyFiles": [
+          "server/llm.js",
+          "server/repoParser.js",
+          "server/summarizer.js",
+          "src/components/RepoOverview.jsx"
+        ],
+        "setup": "npm install && npm run dev (requires ANTHROPIC_API_KEY in .env)",
+        "openQuestions": [
+          "Could the parser use AST analysis instead of raw truncation?",
+          "Add support for private repos via GitHub token?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
