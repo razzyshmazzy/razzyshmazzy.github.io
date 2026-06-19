@@ -733,6 +733,15 @@ body {
   margin: 0 auto;
 }
 
+/* In the 3-column layout, a lone 4th card sits alone in row 2 —
+   drop it into the center column. Self-limiting via :last-child:
+   if a 5th hero is added, the 4th is no longer last and this won't apply. */
+@media (min-width: 901px) {
+  .repos-grid > div:nth-child(4):last-child {
+    grid-column: 2;
+  }
+}
+
 @media (max-width: 900px) {
   .repos-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -783,6 +792,8 @@ body {
   line-height: 1.9;
   white-space: pre-line;
   letter-spacing: 0.01em;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 /* ═══════════════════════════════════════════════════

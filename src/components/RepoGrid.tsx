@@ -11,11 +11,13 @@ const HREF_OVERRIDES: Record<string, string> = {
   library: '../library/',
   doccer: '../doccer/',
   atlens: '../atlens/',
+  cipher: '../cipher/',
 };
 
 const IMAGE_OVERRIDES: Record<string, string> = {
   library: '/screenshots/library.png',
   atlens: '/screenshots/atlens.png',
+  cipher: '/screenshots/cipher.png',
 };
 
 function RepoCard({ repo }: { repo: Repo }) {
