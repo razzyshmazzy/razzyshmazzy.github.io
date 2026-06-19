@@ -8,9 +8,9 @@ interface Props {
 }
 
 const HREF_OVERRIDES: Record<string, string> = {
-  library: 'https://razzyshmazzy.com/library/',
-  doccer: 'https://doccer.razzyshmazzy.com',
-  atlens: '../atlens',
+  library: '../library/',
+  doccer: '../doccer/',
+  atlens: '../atlens/',
 };
 
 const IMAGE_OVERRIDES: Record<string, string> = {
