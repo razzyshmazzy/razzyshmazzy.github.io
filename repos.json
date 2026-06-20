@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-19T10:17:41.288Z",
+  "lastUpdated": "2026-06-20T08:46:11.201Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
@@ -9,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-18T10:12:43Z",
+      "updatedAt": "2026-06-19T22:11:28Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -54,6 +54,46 @@
         "openQuestions": [
           "Add a dark/light theme toggle?",
           "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
+    {
+      "name": "doccer",
+      "description": "Compiles all google docs and provides a downloadable pdf",
+      "language": "HTML",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/doccer",
+      "homepage": null,
+      "updatedAt": "2026-06-19T21:38:42Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Web app that authenticates with Google, fetches all documents from a Google Drive account, and bundles them into a single downloadable PDF.",
+        "techStack": {
+          "languages": [
+            "JavaScript"
+          ],
+          "frameworks": [],
+          "tools": [
+            "Google Docs API",
+            "Google Drive API",
+            "PDF generation library"
+          ]
+        },
+        "architecture": "Frontend JavaScript app that handles Google OAuth flow, iterates over Drive documents, converts each to PDF format via Google's export endpoint, then merges them into a single downloadable file.",
+        "entryPoints": [
+          "index.html",
+          "main.js"
+        ],
+        "keyFiles": [
+          "auth.js",
+          "drive.js",
+          "pdf.js"
+        ],
+        "setup": "Configure Google OAuth credentials and open index.html in a browser",
+        "openQuestions": [
+          "Does it preserve original document formatting?",
+          "How are large document sets handled (rate limits)?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
@@ -217,46 +257,6 @@
         "openQuestions": [
           "Which library API is used — Open Library, Internet Archive?",
           "Is there search/filter by title or author?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "doccer",
-      "description": "Compiles all google docs and provides a downloadable pdf",
-      "language": "HTML",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/doccer",
-      "homepage": null,
-      "updatedAt": "2026-04-12T00:44:20Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Web app that authenticates with Google, fetches all documents from a Google Drive account, and bundles them into a single downloadable PDF.",
-        "techStack": {
-          "languages": [
-            "JavaScript"
-          ],
-          "frameworks": [],
-          "tools": [
-            "Google Docs API",
-            "Google Drive API",
-            "PDF generation library"
-          ]
-        },
-        "architecture": "Frontend JavaScript app that handles Google OAuth flow, iterates over Drive documents, converts each to PDF format via Google's export endpoint, then merges them into a single downloadable file.",
-        "entryPoints": [
-          "index.html",
-          "main.js"
-        ],
-        "keyFiles": [
-          "auth.js",
-          "drive.js",
-          "pdf.js"
-        ],
-        "setup": "Configure Google OAuth credentials and open index.html in a browser",
-        "openQuestions": [
-          "Does it preserve original document formatting?",
-          "How are large document sets handled (rate limits)?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
