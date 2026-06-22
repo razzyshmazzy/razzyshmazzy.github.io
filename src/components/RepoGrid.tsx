@@ -12,6 +12,7 @@ const HREF_OVERRIDES: Record<string, string> = {
   doccer: '../doccer/',
   atlens: '../atlens/',
   cipher: '../cipher/',
+  basher: '../basher/',
 };
 
 const IMAGE_OVERRIDES: Record<string, string> = {

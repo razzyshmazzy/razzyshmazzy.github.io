@@ -231,6 +231,18 @@
       "summary": null
     },
     {
+      "name": "basher",
+      "description": "Runs untrusted code in disposable, sandboxed containers",
+      "language": "Python",
+      "image": null,
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/basher",
+      "homepage": null,
+      "updatedAt": "2026-03-01T00:00:00Z",
+      "topics": [],
+      "summary": null
+    },
+    {
       "name": "status32",
       "description": null,
       "language": "HTML",

@@ -36,9 +36,18 @@ export default function QuoteDivider() {
       .then((r) => r.text())
       .then((raw) => {
         const quotes = parseQuotes(raw);
-        if (quotes.length) {
-          setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+        if (!quotes.length) return;
+
+        // Avoid repeating the quote shown on the previous refresh. We only
+        // remember the single last index (in sessionStorage), so a quote can
+        // reappear later — just never twice in a row.
+        const last = Number(sessionStorage.getItem('lastQuote'));
+        let idx = Math.floor(Math.random() * quotes.length);
+        if (quotes.length > 1 && idx === last) {
+          idx = (idx + 1) % quotes.length;
         }
+        sessionStorage.setItem('lastQuote', String(idx));
+        setQuote(quotes[idx]);
       })
       .catch(() => {});
   }, []);

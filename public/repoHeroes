@@ -6,3 +6,5 @@
 -Understands a codebase}
 {cipher
 -Encode and decode secret messages}
+{basher
+-Runs untrusted code in disposable, sandboxed containers}
