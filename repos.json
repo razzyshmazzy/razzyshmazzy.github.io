@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "2026-06-22T11:42:23.402Z",
+  "lastUpdated": "2026-06-23T09:28:41.851Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
-      "name": "cipher",
-      "description": "Checks every known cipher variation",
-      "language": "JavaScript",
+      "name": "basher",
+      "description": "Setup instructions for my Discord bot, Basher",
+      "language": "Python",
       "stars": 0,
-      "url": "https://github.com/razzyshmazzy/cipher",
-      "homepage": "https://cipher-solver.vercel.app",
-      "updatedAt": "2026-06-21T18:02:05Z",
+      "url": "https://github.com/razzyshmazzy/basher",
+      "homepage": null,
+      "updatedAt": "2026-06-22T23:56:58Z",
       "topics": [],
       "summary": null
     },
@@ -20,7 +20,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-21T09:41:20Z",
+      "updatedAt": "2026-06-22T22:49:04Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +68,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "cipher",
+      "description": "Checks every known cipher variation",
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/cipher",
+      "homepage": "https://cipher-solver.vercel.app",
+      "updatedAt": "2026-06-21T18:02:05Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "doccer",
