@@ -24,6 +24,20 @@
   box-shadow: 0 4px 20px rgba(255, 255, 255, 0.04);
 }
 
+/* While the cursor is over the GitHub logo, drop the card's glow back to its
+   resting state. It returns the moment the cursor moves off the logo and back
+   onto the rest of the card. */
+.card:hover:has(.ghLink:hover) {
+  border-color: #222;
+  box-shadow: none;
+}
+
+.mainLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .imageWrap {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -64,6 +78,13 @@
   flex: 1;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .name {
   font-size: 0.95rem;
   font-weight: 700;
@@ -74,6 +95,28 @@
 }
 
 .card:hover .name {
+  transform: translateZ(20px);
+}
+
+.ghLink {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #888;
+  transition: color 0.2s, transform 0.4s;
+  /* Enlarge the interaction hit area without changing the logo size or its
+     position — the negative margin cancels the padding in layout. */
+  padding: 6px;
+  margin: -6px;
+}
+
+.ghLink:hover {
+  color: #fff;
+}
+
+.card:hover .ghLink {
   transform: translateZ(20px);
 }
 
