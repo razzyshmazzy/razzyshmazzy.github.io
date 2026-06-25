@@ -1,18 +1,7 @@
 {
-  "lastUpdated": "2026-06-24T08:57:30.739Z",
+  "lastUpdated": "2026-06-25T08:52:00.956Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "basher",
-      "description": "Setup instructions for my Discord bot, Basher",
-      "language": "Python",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/basher",
-      "homepage": null,
-      "updatedAt": "2026-06-23T22:39:21Z",
-      "topics": [],
-      "summary": null
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -20,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-23T09:28:46Z",
+      "updatedAt": "2026-06-24T22:49:53Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +57,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "basher",
+      "description": "Setup instructions for my Discord bot, Basher",
+      "language": "Python",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/basher",
+      "homepage": null,
+      "updatedAt": "2026-06-24T22:18:16Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "cipher",
