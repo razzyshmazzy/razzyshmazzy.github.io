@@ -11,7 +11,7 @@ const HREF_OVERRIDES: Record<string, string> = {
   library: '../library/',
   doccer: '../doccer/',
   atlens: '../atlens/',
-  cipher: '../cipher/',
+  cipher: 'https://cipher-solver.vercel.app',
   basher: '../basher/',
 };
 
