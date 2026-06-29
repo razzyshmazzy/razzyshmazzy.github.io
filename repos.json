@@ -1,18 +1,7 @@
 {
-  "lastUpdated": "2026-06-28T08:44:24.868Z",
+  "lastUpdated": "2026-06-29T10:45:49.059Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "basher-legal",
-      "description": null,
-      "language": "HTML",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/basher-legal",
-      "homepage": null,
-      "updatedAt": "2026-06-27T21:00:00Z",
-      "topics": [],
-      "summary": null
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -20,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": null,
-      "updatedAt": "2026-06-27T08:29:26Z",
+      "updatedAt": "2026-06-28T08:44:28Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +57,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "basher-legal",
+      "description": null,
+      "language": "HTML",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/basher-legal",
+      "homepage": null,
+      "updatedAt": "2026-06-27T21:00:00Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "basher",
