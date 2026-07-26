@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/atlens", "destination": "https://razzyshmazzy.github.io/atlens/" },
+    { "source": "/atlens/:path*", "destination": "https://razzyshmazzy.github.io/atlens/:path*" },
+
+    { "source": "/library", "destination": "https://razzyshmazzy.github.io/library/" },
+    { "source": "/library/:path*", "destination": "https://razzyshmazzy.github.io/library/:path*" },
+
+    { "source": "/doccer", "destination": "https://razzyshmazzy.github.io/doccer/" },
+    { "source": "/doccer/:path*", "destination": "https://razzyshmazzy.github.io/doccer/:path*" },
+
+    { "source": "/basher", "destination": "https://razzyshmazzy.github.io/basher/" },
+    { "source": "/basher/:path*", "destination": "https://razzyshmazzy.github.io/basher/:path*" }
+  ]
+}

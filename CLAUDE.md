@@ -21,6 +21,29 @@ npm run lint    # eslint (flat config, eslint v9)
 
 There is no `start` script that matters in production — the deploy serves `out/` as static files.
 
+## ⚠ Hosting split: this site is on Vercel, every other project is still on GitHub Pages
+
+`razzyshmazzy.com` is deployed by **Vercel** from this repo. All the other projects (`atlens`, `library`, `doccer`, `basher`, …) are still GitHub Pages *project* sites at `https://razzyshmazzy.github.io/<repo>/`.
+
+[vercel.json](vercel.json) bridges the two with a rewrite pair per project, so `razzyshmazzy.com/atlens` transparently serves the Pages site (no redirect, URL stays on the custom domain).
+
+**When you add a project to the site, you MUST add its rewrite pair to `vercel.json`:**
+
+```json
+{ "source": "/NAME",         "destination": "https://razzyshmazzy.github.io/NAME/" },
+{ "source": "/NAME/:path*",  "destination": "https://razzyshmazzy.github.io/NAME/:path*" }
+```
+
+Both lines are required — the bare one for the entry URL, the `:path*` one so the Pages site's absolute asset paths (`/NAME/style.css`, etc.) resolve.
+
+Related places that must stay in sync when adding a project:
+- `HREF_OVERRIDES` in [RepoGrid.tsx](src/components/RepoGrid.tsx) — a `../NAME/` entry relies on this rewrite existing. Projects hosted elsewhere (e.g. `cipher` → `https://cipher-solver.vercel.app`) use a full URL instead and need **no** rewrite.
+- [public/repoHeroes](public/repoHeroes) — the curation list that decides whether the card shows at all.
+
+`vercel.json` is strict JSON — **do not add comments or extra keys**, Vercel rejects unknown properties. If real inline comments become worth it, migrate to `vercel.ts` (`npm i @vercel/config`, export a typed `VercelConfig`).
+
+The two GitHub Actions workflows below still exist but the Pages deploy is no longer what serves `razzyshmazzy.com`.
+
 ## Deploy & sync pipeline
 
 Two GitHub Actions workflows in [.github/workflows/](.github/workflows/):
