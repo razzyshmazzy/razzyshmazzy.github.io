@@ -1,7 +1,74 @@
 {
-  "lastUpdated": "2026-08-18T06:32:02.269Z",
+  "lastUpdated": "2026-08-19T06:32:48.152Z",
   "owner": "razzyshmazzy",
   "repos": [
+    {
+      "name": "basher",
+      "description": "Setup instructions for my Discord bot, Basher",
+      "language": "Python",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/basher",
+      "homepage": null,
+      "updatedAt": "2026-08-19T03:23:05Z",
+      "topics": [],
+      "summary": null
+    },
+    {
+      "name": "razzyshmazzy.github.io",
+      "description": "The home page of all things raz!",
+      "language": "TypeScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
+      "homepage": "https://razzyshmazzy-github-io.vercel.app",
+      "updatedAt": "2026-08-18T06:33:25Z",
+      "topics": [],
+      "summary": {
+        "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
+        "techStack": {
+          "languages": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "WebAssembly",
+            "Python",
+            "Lua",
+            "SQL",
+            "GLSL",
+            "Markdown",
+            "CoffeeScript",
+            "brainf*ck",
+            "SVG",
+            "JSON"
+          ],
+          "frameworks": [
+            "Brython",
+            "Fengari",
+            "sql.js",
+            "marked.js"
+          ],
+          "tools": [
+            "GitHub Pages",
+            "GitHub Actions",
+            "highlight.js"
+          ]
+        },
+        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and brainf*ck hides an easter egg.",
+        "entryPoints": [
+          "index.html"
+        ],
+        "keyFiles": [
+          "index.html",
+          "repos.json",
+          ".github/workflows/sync-repos.yml"
+        ],
+        "setup": "Push to GitHub — Pages serves it automatically. Run the sync workflow to refresh repo data.",
+        "openQuestions": [
+          "Add a dark/light theme toggle?",
+          "Support private repos via GitHub token?"
+        ],
+        "analyzedAt": "2026-03-16T00:00:00Z"
+      }
+    },
     {
       "name": "pilk-site",
       "description": null,
@@ -49,62 +116,6 @@
         "openQuestions": [
           "Does it preserve original document formatting?",
           "How are large document sets handled (rate limits)?"
-        ],
-        "analyzedAt": "2026-03-16T00:00:00Z"
-      }
-    },
-    {
-      "name": "razzyshmazzy.github.io",
-      "description": "The home page of all things raz!",
-      "language": "TypeScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
-      "homepage": "https://razzyshmazzy-github-io.vercel.app",
-      "updatedAt": "2026-08-17T06:40:30Z",
-      "topics": [],
-      "summary": {
-        "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
-        "techStack": {
-          "languages": [
-            "HTML",
-            "CSS",
-            "JavaScript",
-            "WebAssembly",
-            "Python",
-            "Lua",
-            "SQL",
-            "GLSL",
-            "Markdown",
-            "CoffeeScript",
-            "brainf*ck",
-            "SVG",
-            "JSON"
-          ],
-          "frameworks": [
-            "Brython",
-            "Fengari",
-            "sql.js",
-            "marked.js"
-          ],
-          "tools": [
-            "GitHub Pages",
-            "GitHub Actions",
-            "highlight.js"
-          ]
-        },
-        "architecture": "A single static HTML file that bootstraps 13 languages: GLSL runs the hero background shader, SQL stores and filters repos, Python computes stats, Lua manages filter state, CoffeeScript wires events, WASM powers fuzzy search, and brainf*ck hides an easter egg.",
-        "entryPoints": [
-          "index.html"
-        ],
-        "keyFiles": [
-          "index.html",
-          "repos.json",
-          ".github/workflows/sync-repos.yml"
-        ],
-        "setup": "Push to GitHub — Pages serves it automatically. Run the sync workflow to refresh repo data.",
-        "openQuestions": [
-          "Add a dark/light theme toggle?",
-          "Support private repos via GitHub token?"
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
@@ -186,17 +197,6 @@
       "url": "https://github.com/razzyshmazzy/basher-legal",
       "homepage": null,
       "updatedAt": "2026-06-27T21:00:00Z",
-      "topics": [],
-      "summary": null
-    },
-    {
-      "name": "basher",
-      "description": "Setup instructions for my Discord bot, Basher",
-      "language": "Python",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/basher",
-      "homepage": null,
-      "updatedAt": "2026-06-26T23:49:40Z",
       "topics": [],
       "summary": null
     },
