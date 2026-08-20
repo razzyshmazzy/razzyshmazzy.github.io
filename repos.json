@@ -1,18 +1,7 @@
 {
-  "lastUpdated": "2026-08-19T06:32:48.152Z",
+  "lastUpdated": "2026-08-20T06:34:54.478Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "basher",
-      "description": "Setup instructions for my Discord bot, Basher",
-      "language": "Python",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/basher",
-      "homepage": null,
-      "updatedAt": "2026-08-19T03:23:05Z",
-      "topics": [],
-      "summary": null
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -20,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": "https://razzyshmazzy-github-io.vercel.app",
-      "updatedAt": "2026-08-18T06:33:25Z",
+      "updatedAt": "2026-08-19T06:33:04Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +57,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "basher",
+      "description": "Setup instructions for my Discord bot, Basher",
+      "language": "Python",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/basher",
+      "homepage": null,
+      "updatedAt": "2026-08-19T03:23:05Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "pilk-site",
