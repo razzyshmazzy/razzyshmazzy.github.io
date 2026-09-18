@@ -1,18 +1,7 @@
 {
-  "lastUpdated": "2026-09-17T10:48:44.212Z",
+  "lastUpdated": "2026-09-18T10:24:01.255Z",
   "owner": "razzyshmazzy",
   "repos": [
-    {
-      "name": "sigmaarcher",
-      "description": "This is for hack club jumpstart",
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/sigmaarcher",
-      "homepage": null,
-      "updatedAt": "2026-09-17T03:17:22Z",
-      "topics": [],
-      "summary": null
-    },
     {
       "name": "razzyshmazzy.github.io",
       "description": "The home page of all things raz!",
@@ -20,7 +9,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": "https://razzyshmazzy-github-io.vercel.app",
-      "updatedAt": "2026-09-16T10:40:31Z",
+      "updatedAt": "2026-09-17T10:48:51Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -68,6 +57,17 @@
         ],
         "analyzedAt": "2026-03-16T00:00:00Z"
       }
+    },
+    {
+      "name": "sigmaarcher",
+      "description": "This is for hack club jumpstart",
+      "language": "JavaScript",
+      "stars": 0,
+      "url": "https://github.com/razzyshmazzy/sigmaarcher",
+      "homepage": null,
+      "updatedAt": "2026-09-17T03:17:22Z",
+      "topics": [],
+      "summary": null
     },
     {
       "name": "basher",
