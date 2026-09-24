@@ -13,12 +13,14 @@ const HREF_OVERRIDES: Record<string, string> = {
   atlens: '../atlens/',
   cipher: 'https://cipher-solver.vercel.app',
   basher: '../basher/',
+  phage: '../phage/',
 };
 
 const IMAGE_OVERRIDES: Record<string, string> = {
   library: '/screenshots/library.png',
   atlens: '/screenshots/atlens.png',
   cipher: '/screenshots/cipher.png',
+  phage: '/screenshots/phage.png',
 };
 
 function RepoCard({ repo }: { repo: Repo }) {
