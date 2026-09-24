@@ -16,6 +16,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   min-height: 100vh;
+  /* The NecoWalker is position:absolute and translates past the right edge as it
+     walks off-screen. Without this, that overflow widens the page and yanks it
+     into a horizontal scroll/zoom every lap. Clip it (not `hidden`, which would
+     force overflow-y to auto and break the sticky/fixed layers). */
+  overflow-x: clip;
 }
 
 /* ═══════════════════════════════════════════════════

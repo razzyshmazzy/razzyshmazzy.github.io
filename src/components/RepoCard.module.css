@@ -58,14 +58,16 @@
   transform: scale(1.03);
 }
 
-/* Phage's PHAGE wordmark is wider than the card's 16/9 crop, so ease it out a
-   touch and nudge it right so it reads centered. */
-.card[data-repo='phage'] .image {
-  transform: translateX(3%) scale(0.92);
+/* Phage's PHAGE wordmark (≈2.3:1, black-on-white) is wider than the card's
+   16/9 crop, so `cover` clips the outer letters. Contain it instead so the whole
+   word fits firmly in the box, on white to match the artwork so the letterbox is
+   seamless. */
+.card[data-repo='phage'] .imageWrap {
+  background: #fff;
 }
 
-.card[data-repo='phage']:hover .image {
-  transform: translateX(3%) scale(0.95);
+.card[data-repo='phage'] .image {
+  object-fit: contain;
 }
 
 .imagePlaceholder {
