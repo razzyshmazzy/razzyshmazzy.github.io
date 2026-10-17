@@ -1,15 +1,26 @@
 {
-  "lastUpdated": "2026-10-16T10:29:40.395Z",
+  "lastUpdated": "2026-10-17T10:00:08.654Z",
   "owner": "razzyshmazzy",
   "repos": [
     {
       "name": "goatedcontext",
       "description": "Your agent is now omniscient across repos",
       "language": "TypeScript",
-      "stars": 1,
+      "stars": 2,
       "url": "https://github.com/razzyshmazzy/goatedcontext",
       "homepage": null,
-      "updatedAt": "2026-10-16T04:02:15Z",
+      "updatedAt": "2026-10-17T03:13:09Z",
+      "topics": [],
+      "summary": null
+    },
+    {
+      "name": "phage",
+      "description": "My blog",
+      "language": "JavaScript",
+      "stars": 1,
+      "url": "https://github.com/razzyshmazzy/phage",
+      "homepage": null,
+      "updatedAt": "2026-10-16T17:15:06Z",
       "topics": [],
       "summary": null
     },
@@ -20,7 +31,7 @@
       "stars": 0,
       "url": "https://github.com/razzyshmazzy/razzyshmazzy.github.io",
       "homepage": "https://razzyshmazzy-github-io.vercel.app",
-      "updatedAt": "2026-10-15T10:42:46Z",
+      "updatedAt": "2026-10-16T10:29:45Z",
       "topics": [],
       "summary": {
         "purpose": "Personal portfolio site and GitHub Pages home — the very page you're viewing right now, built with 13 programming languages in one HTML file.",
@@ -77,17 +88,6 @@
       "url": "https://github.com/razzyshmazzy/sigmaarcher",
       "homepage": null,
       "updatedAt": "2026-10-04T21:48:55Z",
-      "topics": [],
-      "summary": null
-    },
-    {
-      "name": "phage",
-      "description": "My blog",
-      "language": "JavaScript",
-      "stars": 0,
-      "url": "https://github.com/razzyshmazzy/phage",
-      "homepage": null,
-      "updatedAt": "2026-09-27T00:42:17Z",
       "topics": [],
       "summary": null
     },
